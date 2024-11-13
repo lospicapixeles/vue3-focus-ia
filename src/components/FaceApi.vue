@@ -1,7 +1,7 @@
 <template>
     <div style="position: relative;">
         <!-- Imagen de referencia -->
-        <img ref="image" id="myImg" src="/images/ejemplo.png" style="width: 1080px; display: block;" />
+        <img ref="image" id="myImg" src="/images/imagen.jpeg" style="width: 1080px; display: block;" />
         <!-- Canvas para dibujar cuadros y etiquetas -->
         <canvas ref="canvas" id="overlay" style="position: absolute; top: 0; left: 0;"></canvas>
     </div>
@@ -20,7 +20,6 @@ onMounted(async () => {
     await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
     await faceapi.nets.faceExpressionNet.loadFromUri('/models');
     await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
-
 
     // Ajustar el tamaño del canvas al tamaño de la imagen
     canvas.value.width = image.value.width;

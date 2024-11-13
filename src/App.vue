@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Hola </h1>
+    <h1>Pruebas de integración en sistema </h1>
     <FaceApi />
   </div>
 </template>
