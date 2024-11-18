@@ -1,10 +1,3 @@
 <template>
-  <div>
-    <h1>Pruebas de integración en sistema </h1>
-    <FaceApi />
-  </div>
+  <router-view></router-view>
 </template>
-
-<script setup>
-import FaceApi from './components/FaceApi.vue';
-</script>
