@@ -63,6 +63,17 @@ export const auth = defineStore('auth', {
             }finally{
                 this.isLoading = false
             }
+        },
+        onLogout(){
+            this.isLoading = true
+            try{
+                localStorage.removeItem('_u_')
+                window.location.href = '/login'
+            }catch(e){
+                console.log(e)
+            }finally{
+                this.isLoading = false
+            }
         }
     }
 })

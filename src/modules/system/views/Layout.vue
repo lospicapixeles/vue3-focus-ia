@@ -1,4 +1,12 @@
 <template>
-    <h1>Layout</h1>
-    <router-view></router-view>
+    <div class="bg-zinc-100 dark:bg-black">
+        <Menu>
+            <RouterView />
+        </Menu>
+    </div>
 </template>
+
+<script setup>
+import Menu from '../../../components/Menu.vue';
+
+</script>

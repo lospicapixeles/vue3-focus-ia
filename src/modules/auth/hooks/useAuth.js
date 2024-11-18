@@ -9,6 +9,7 @@ const useAuth = () => {
         checkLogin: auth().checkLogin,
         checkLogout: auth().checkLogout,
         onAuth: auth().onAuth,
+        onLogout: auth().onLogout
     }
 }
 
