@@ -3,6 +3,7 @@ import systemApi from "../../../../../apis/systemApi";
 
 export const usuario = defineStore("usuario", {
   state: () => ({
+    openModal: false,
     usuarios: [],
     pag: {
         buscar: '', 
