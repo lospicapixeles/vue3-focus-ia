@@ -1,12 +1,12 @@
 <template>
     <div class="bg-zinc-100 dark:bg-black">
-        <Menu>
+        <Header>
             <RouterView />
-        </Menu>
+        </Header>
     </div>
 </template>
 
 <script setup>
-import Menu from '../../../components/Menu.vue';
+import Header from '../../../components/Header.vue';
 
 </script>

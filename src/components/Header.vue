@@ -16,7 +16,7 @@
             </div>
             <DropUser />
         </header>
-        <div class="overflow-y-auto p-4">
+        <div class="overflow-y-auto h-screen p-4">
           <slot />
         </div>
       </div>
