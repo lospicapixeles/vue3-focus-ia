@@ -7,7 +7,10 @@ import {
   faUsers,
   faChalkboardUser,
   faBook,
-  faClock
+  faClock,
+  faCaretLeft,
+  faCaretRight,
+  faEnvelope
 } from "@fortawesome/free-solid-svg-icons"
 
 export default function setupFontAwesomeIcons() {
@@ -19,6 +22,9 @@ export default function setupFontAwesomeIcons() {
         faUsers,
         faChalkboardUser,
         faBook,
-        faClock
+        faClock,
+        faCaretLeft,
+        faCaretRight,
+        faEnvelope
     );
 }

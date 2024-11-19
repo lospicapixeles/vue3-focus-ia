@@ -47,9 +47,8 @@ export const auth = defineStore('auth', {
             }
         },
         logout(){
-            this.user = {},
-            this.isAuth = false
             localStorage.removeItem('_u_')
+            localStorage.removeItem('_m_')
         },
         async onAuth(){
             this.isLoading = true
@@ -67,7 +66,7 @@ export const auth = defineStore('auth', {
         onLogout(){
             this.isLoading = true
             try{
-                localStorage.removeItem('_u_')
+                this.logout()
                 window.location.href = '/login'
             }catch(e){
                 console.log(e)

@@ -5,14 +5,14 @@
       />
       <div 
         :class="!openSidebar ? 'w-full' : 'w-full lg:w-3/4 xl:w-4/5 xxl:w-5/6'">
-        <header class="bg-white/20 dark:bg-zinc-800/30 backdrop-blur-md sticky top-0 px-4 flex justify-between items-center py-2">
+        <header class="bg-white border-b dark:bg-zinc-800/30 backdrop-blur-md sticky top-0 px-4 flex justify-between items-center py-2">
             <div class="text-zinc-800 dark:text-zinc-200">
                 <button
                   @click="openSidebar = !openSidebar"
                 >
                   <fa :icon="openSidebar ? 'angles-left' :'bars'"/>
                 </button>
-                <router-link to="/" class="ml-2 text-lg font-bold text-zinc-800 dark:text-zinc-200">Ali Dashboard</router-link>
+                <router-link to="/" class="ml-2 text-lg font-bold text-zinc-800 dark:text-zinc-200">Dashboard</router-link>
             </div>
             <DropUser />
         </header>
