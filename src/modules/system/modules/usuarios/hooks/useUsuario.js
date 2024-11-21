@@ -6,7 +6,9 @@ const useUsuario = () => {
 
     return {
         ...storeRef,
-        getUsuarios: usuario().getUsuarios
+        getUsuarios: usuario().getUsuarios,
+        onSubmit: usuario().onSubmit,
+        resetForm: usuario().resetForm
     }
 }
 

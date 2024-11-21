@@ -11,7 +11,8 @@ import {
   faCaretLeft,
   faCaretRight,
   faEnvelope,
-  faXmark
+  faXmark,
+  faCloudArrowUp
 } from "@fortawesome/free-solid-svg-icons"
 
 export default function setupFontAwesomeIcons() {
@@ -27,6 +28,7 @@ export default function setupFontAwesomeIcons() {
         faCaretLeft,
         faCaretRight,
         faEnvelope,
-        faXmark
+        faXmark,
+        faCloudArrowUp
     );
 }
