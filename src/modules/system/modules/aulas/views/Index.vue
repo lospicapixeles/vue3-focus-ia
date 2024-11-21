@@ -1,5 +1,5 @@
 <template>
-    <CardModal :showing="openModal" @close="openModal = false" title="Nuevo usuario">
+    <CardModal :showing="openModal" @close="openModal = false" title="Nueva aula">
         <div class="flex flex-wrap">
             <div class="w-full md:w-1/2 pr-0 md:pr-2">
                 <label for=""
