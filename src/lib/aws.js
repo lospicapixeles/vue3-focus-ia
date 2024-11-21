@@ -3,8 +3,8 @@ import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client
 const client = new S3Client({
     region: 'us-east-1',
     credentials: {
-        accessKeyId:'',
-        secretAccessKey: '',
+        accessKeyId: import.meta.env.VITE_AWS_KEY, 
+        secretAccessKey: import.meta.env.VITE_AWS_SECRET,
     },
     maxAttempts: 3,
 });

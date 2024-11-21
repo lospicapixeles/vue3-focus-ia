@@ -8,7 +8,8 @@ const useUsuario = () => {
         ...storeRef,
         getUsuarios: usuario().getUsuarios,
         onSubmit: usuario().onSubmit,
-        resetForm: usuario().resetForm
+        resetForm: usuario().resetForm,
+        onDelete: usuario().onDelete
     }
 }
 

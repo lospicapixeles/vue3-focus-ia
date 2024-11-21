@@ -12,7 +12,9 @@ import {
   faCaretRight,
   faEnvelope,
   faXmark,
-  faCloudArrowUp
+  faCloudArrowUp,
+    faPenToSquare,
+    faTrashAlt
 } from "@fortawesome/free-solid-svg-icons"
 
 export default function setupFontAwesomeIcons() {
@@ -29,6 +31,8 @@ export default function setupFontAwesomeIcons() {
         faCaretRight,
         faEnvelope,
         faXmark,
-        faCloudArrowUp
+        faCloudArrowUp,
+        faPenToSquare,
+        faTrashAlt
     );
 }

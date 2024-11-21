@@ -69,7 +69,10 @@
             <label class="text-zinc-600 text-sm">Administrar acceso de usuarios</label>
         </div>
         <div class="mt-2 flex justify-between">
-            <input type="text" placeholder="Buscar usuario"
+            <input type="text" 
+                v-model="pag.buscar"
+                @keypress.enter="changePage(1)"
+                placeholder="Buscar usuario"
                 class="rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
             <button @click="newUsuario"
                 class="py-2 px-3 text-center bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 text-white rounded-lg">Nuevo</button>
@@ -83,8 +86,9 @@
                         <tr
                             class="text-sm sticky top-0 z-[4] text-zinc-700 bg-zinc-200 dark:bg-zinc-700 dark:text-white transition-all duration-300">
                             <th class="py-1 px-2 text-left w-[150px]">Nombre</th>
-                            <th class="py-1 px-2 text-left w-[150px]">Correo</th>
+                            <th class="py-1 px-2 text-left w-[200px]">Correo</th>
                             <th class="py-1 px-2 text-left w-[100px]">Rol</th>
+                            <th class="py-1 px-2 text-left w-[80px]"></th>
                         </tr>
                     </thead>
                     <!-- Cuerpo de la tabla -->
@@ -101,10 +105,20 @@
                                 </div>
                             </td>
                             <td class="px-2 py-1 text-zinc-700 transition-all duration-300">
-                                <fa icon="envelope" /> {{ usuario.email }}
+                                <div class="flex space-x-2 items-center">
+                                    <fa icon="envelope" /> <span>{{ usuario.email }}</span>
+                                </div>
                             </td>
                             <td class="px-2 py-1 text-zinc-700 transition-all duration-300">{{
                                 usuario.rol }}</td>
+                            <td class="px-2 py-1 text-zinc-700 transition-all duration-300">
+                                <div class="flex justify-end items-center space-x-2">
+                                    <button class="text-zinc-900 text-lg"><fa icon="pen-to-square"/></button>
+                                    <button
+                                        @click="onDelete(usuario.id)"
+                                        class="text-rose-500 text-lg"><fa icon="trash-alt"/></button>
+                                </div>
+                            </td>
                         </tr>
                         <tr v-if="!usuarios.length">
                             <td class="px-2 py-2 text-center text-sm text-zinc-500 transition-all duration-300"
@@ -143,7 +157,8 @@ const {
     isLoading,
     isLoadingMessage,
     onSubmit,
-    resetForm
+    resetForm,
+    onDelete
 } = useUsuario();
 
 const changePage = async (e) => {

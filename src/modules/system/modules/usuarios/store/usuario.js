@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import systemApi from "../../../../../apis/systemApi";
+import { toast } from "vue3-toastify"
 
 export const usuario = defineStore("usuario", {
   state: () => ({
@@ -45,17 +46,36 @@ export const usuario = defineStore("usuario", {
     async onSubmit(){
         this.isLoading = true
         if(this.new_usuario.id){
-
+            try{
+                const { data } = await systemApi.put(`/usuarios/${this.new_usuario.id}`, this.new_usuario)
+                await this.getUsuarios()
+                this.openModal = false
+                toast.success(data.message)
+            }catch(e){
+                toast.error(e.response.data.message)
+            }finally{
+                this.isLoading = false
+            }     
         }else{
             try{
                 const { data } = await systemApi.post('/usuarios', this.new_usuario)
                 await this.getUsuarios()
                 this.openModal = false
+                toast.success(data.message)
             }catch(e){
-                console.log(e)
+                toast.error(e.response.data.message)
             }finally{
                 this.isLoading = false
             }     
+        }
+    },
+    async onDelete(id){
+        try{
+            const { data } = await systemApi.delete(`/usuarios/${id}`)
+            toast.success(data.message)
+            await this.getUsuarios()
+        }catch(e){
+            toast.error(e.response.data.message)
         }
     }
   }

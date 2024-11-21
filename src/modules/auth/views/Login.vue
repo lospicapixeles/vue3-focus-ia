@@ -23,6 +23,7 @@
             <label class="text-sm text-zinc-600">Contraseña</label>
             <input
                 v-model="auth.password"
+                @keypress.enter="onAuth()"
                 class="w-full rounded-lg dark:bg-zinc-900 dark:border-zinc-700 dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200"
                 type="password"
             />
