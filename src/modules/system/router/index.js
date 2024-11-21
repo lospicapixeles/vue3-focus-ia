@@ -1,4 +1,5 @@
 import routerUsuarios from '../modules/usuarios/router'
+import routerAulas from '../modules/aulas/router'
 
 export default {
     name: 'home',
@@ -13,6 +14,11 @@ export default {
             name: 'usuarios',
             path: '/usuarios',
             ...routerUsuarios
+        },
+        {
+            name: 'aulas',
+            path: '/aulas',
+            ...routerAulas
         }
     ]
 }

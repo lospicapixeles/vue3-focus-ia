@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import systemApi from "../../../../../apis/systemApi";
 import { toast } from 'vue3-toastify'
 
-export const aulas = defineStore("aulas", {
+export const aula = defineStore("aula", {
   state: () => ({
     isLoading: false,
     openModal: false,
@@ -15,7 +15,7 @@ export const aulas = defineStore("aulas", {
         buscar: '', 
         total: 0,
         page: 1, 
-        cant_reg: 10,
+        cant_reg: 999,
     } 
   }),
   actions: {
@@ -34,6 +34,7 @@ export const aulas = defineStore("aulas", {
           try{
             const { data } = await systemApi.post('/aulas', this.new_aula)
             await this.getAulas()
+            toast.success(data.message)
             this.openModal = false
           }catch(e){
             toast.error(e.response.data.message)
@@ -41,6 +42,15 @@ export const aulas = defineStore("aulas", {
             this.isLoading = false
           }
        }
+    },
+    async onDelete(id){
+      try{
+        const { data } = await systemApi.delete(`/aulas/${id}`)
+        toast.success(data.message)
+        await this.getAulas()
+      }catch(e){
+        toast.error(e.response.data.message)
+      }
     }
   }
-}
+})
