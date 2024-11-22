@@ -7,7 +7,11 @@ const useSesion = () => {
     return {
         ...storeRef,
         getAulasCombo: sesion().getAulasCombo,
-        getSesionsByAulaId: sesion().getSesionsByAulaId
+        getSesionsByAulaId: sesion().getSesionsByAulaId,
+        getCursosCombo: sesion().getCursosCombo,
+        getDocentesCombo: sesion().getDocentesCombo,
+        onSubmit: sesion().onSubmit,
+        resetForm: sesion().resetForm
     }
 }
 
