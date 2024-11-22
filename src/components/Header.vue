@@ -5,7 +5,7 @@
       />
       <div 
         :class="!openSidebar ? 'w-full' : 'w-full lg:w-3/4 xl:w-4/5 xxl:w-5/6'">
-        <header class="bg-white border-b dark:bg-zinc-800/30 backdrop-blur-md sticky top-0 px-4 flex justify-between items-center py-2">
+        <header class="bg-white z-[10] border-b dark:bg-zinc-800/30 backdrop-blur-md sticky top-0 px-4 flex justify-between items-center py-2">
             <div class="text-zinc-800 dark:text-zinc-200">
                 <button
                   @click="openSidebar = !openSidebar"

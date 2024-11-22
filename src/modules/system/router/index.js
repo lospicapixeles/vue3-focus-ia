@@ -1,6 +1,7 @@
 import routerUsuarios from '../modules/usuarios/router'
 import routerAulas from '../modules/aulas/router'
 import routerCurso from '../modules/cursos/router'
+import routerSesion from '../modules/sesions/router'
 
 export default {
     name: 'home',
@@ -25,6 +26,11 @@ export default {
             name: 'cursos',
             path: '/cursos',
             ...routerCurso
+        },
+        {
+            name: 'sesions',
+            path: '/horarios',
+            ...routerSesion
         }
     ]
 }

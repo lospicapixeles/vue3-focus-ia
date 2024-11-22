@@ -14,7 +14,10 @@ import {
   faXmark,
   faCloudArrowUp,
     faPenToSquare,
-    faTrashAlt
+    faTrashAlt,
+    faCaretDown,
+    faCaretUp,
+    faSearch
 } from "@fortawesome/free-solid-svg-icons"
 
 export default function setupFontAwesomeIcons() {
@@ -33,6 +36,9 @@ export default function setupFontAwesomeIcons() {
         faXmark,
         faCloudArrowUp,
         faPenToSquare,
-        faTrashAlt
+        faTrashAlt,
+        faCaretDown,
+        faCaretUp,
+        faSearch
     );
 }
