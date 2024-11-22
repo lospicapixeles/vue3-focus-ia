@@ -9,8 +9,8 @@ if(localStorage.getItem('_u_') !== null){
 
 const systemApi = axios.create({
     /** Ruta base de la API, funciona siempre y cuando el usuario este logueado */
-    //baseURL: 'https://api.siadeg.pe/api',
-    baseURL: 'http://localhost:9001/api',
+    baseURL: 'https://ali.credisur-peru.com/api',
+    //baseURL: 'http://localhost:9001/api',
     headers: {
         'Authorization': `Bearer ${user?.token}`
     }
