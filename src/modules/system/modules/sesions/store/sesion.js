@@ -7,6 +7,7 @@ export const sesion = defineStore("sesion", {
   state: () => ({
     isLoading: false,
     openModal: false,
+    openModalSesion: false,
     aulasCombo: [],
     cursosCombo: [],
     new_sesion: {
@@ -15,7 +16,8 @@ export const sesion = defineStore("sesion", {
       aulas_id: null,
       cursos_id: null,
       docentes_id: null, //en si users_id,
-      color: '#3788D8'
+      color: '#3788D8',
+      curso: ''
     },
     sesions: [],
     docentesCombo: []
@@ -74,7 +76,8 @@ export const sesion = defineStore("sesion", {
         aulas_id: this.new_sesion.aulas_id,
         cursos_id: null,
         docentes_id: null, //en si users_id,
-        color: '#3788D8'
+        color: '#3788D8',
+        curso: ''
       }
     },
     async onSubmit(){
@@ -92,6 +95,19 @@ export const sesion = defineStore("sesion", {
         }finally{
           this.isLoading = false
         }
+      }
+    },
+    async deleteSesion(){
+      this.isLoading = true
+      try{
+        const { data } = await systemApi.delete(`/sesiones/${this.new_sesion.id}`)
+        toast.success(data.message)
+        this.openModalSesion = false
+        await this.getSesionsByAulaId()
+      }catch(e){
+        toast.error(e.response.data.message)
+      }finally{
+        this.isLoading = false
       }
     }
   },

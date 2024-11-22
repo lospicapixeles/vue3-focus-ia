@@ -17,7 +17,8 @@ import {
     faTrashAlt,
     faCaretDown,
     faCaretUp,
-    faSearch
+    faSearch,
+    faVideo
 } from "@fortawesome/free-solid-svg-icons"
 
 export default function setupFontAwesomeIcons() {
@@ -39,6 +40,7 @@ export default function setupFontAwesomeIcons() {
         faTrashAlt,
         faCaretDown,
         faCaretUp,
-        faSearch
+        faSearch,
+        faVideo
     );
 }

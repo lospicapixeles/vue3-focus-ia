@@ -11,7 +11,8 @@ const useSesion = () => {
         getCursosCombo: sesion().getCursosCombo,
         getDocentesCombo: sesion().getDocentesCombo,
         onSubmit: sesion().onSubmit,
-        resetForm: sesion().resetForm
+        resetForm: sesion().resetForm,
+        deleteSesion: sesion().deleteSesion
     }
 }
 

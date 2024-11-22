@@ -63,6 +63,37 @@
       </div>
     </div>
   </CardModal>
+  <CardModal
+    :showing="openModalSesion"
+    @close="openModalSesion =  false"
+    :title="`Detalle de sesion ${new_sesion.curso}`"
+  >
+    <div class="space-y-1 text-zinc-800">
+      <h1 
+        :style="`color: ${new_sesion.color}`"
+        class="text-xl font-bold">📕 {{ new_sesion.curso }}</h1>
+      <p class="text-sm">Fecha inicio: <strong>{{ new_sesion.fecha_inicio }}</strong></p>
+      <p class="text-sm">Fecha fin: <strong>{{ new_sesion.fecha_fin }}</strong></p>
+    </div>
+    <div class="mt-2 flex space-x-2">
+      <button
+        type="button"
+        @click="newLiveSesion()"
+        class="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-lg text-white"
+      >
+        Ir a Sesión
+      </button>
+      <button
+        type="button"
+        :disabled="isLoading"
+        @click="deleteSesion()"
+        :class="isLoading ? 'opacity-50' : ''"
+        class="px-3 py-1 bg-rose-500 hover:bg-rose-600 rounded-lg text-white"
+      >
+        Eliminar
+      </button>
+    </div>
+  </CardModal>
    <div class="bg-white rounded-xl p-4">
     <Select 
       :options="aulasCombo"
@@ -96,6 +127,10 @@ import listPlugin from '@fullcalendar/list'
 import interactionPlugin from '@fullcalendar/interaction'
 import esLocale from '@fullcalendar/core/locales/es'
 import CardModal from '../../../components/CardModal.vue'
+import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'vue-router'
+
+const route = useRouter()
 
 const {
   isLoading,
@@ -110,7 +145,9 @@ const {
   getDocentesCombo,
   docentesCombo,
   onSubmit,
-  resetForm
+  resetForm,
+  openModalSesion,
+  deleteSesion
 } = useSesion()
 
 const newSesion = async () => {
@@ -118,6 +155,11 @@ const newSesion = async () => {
   await getCursosCombo()
   await getDocentesCombo()
   openModal.value = true
+}
+
+const newLiveSesion = async () => {
+  //router.push(`/lives/${uuidv4()}/${new_sesion.value.id}`)
+  window.open(`/lives/${uuidv4()}/${new_sesion.value.id}`, '_blank')
 }
 
 const options = reactive({
@@ -146,7 +188,14 @@ const options = reactive({
     },
     eventClick: async (arg) => {
         //obtener datos del evento
-        console.log(arg.event._def.publicId) 
+        let sesion = sesions.value.find(item => (item.id == arg.event._def.publicId));
+        new_sesion.value.id = sesion.id
+        new_sesion.value.fecha_inicio = sesion.start
+        new_sesion.value.fecha_fin = sesion.end
+        new_sesion.value.color = sesion.color
+        new_sesion.value.curso = sesion.title
+
+        openModalSesion.value = true
     },
     locale: esLocale,
     events: []
