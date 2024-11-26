@@ -6,6 +6,7 @@ const useLive = () => {
 
     return {
         ...storeRef,
+        onSubmit: live().onSubmit
     }
 }
 

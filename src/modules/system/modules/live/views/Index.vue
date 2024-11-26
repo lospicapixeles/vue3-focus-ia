@@ -15,11 +15,15 @@ import useLive from '../hooks/useLive'
 import { useRoute } from 'vue-router'
 import * as faceapi from 'face-api.js'
 
-const router = useRoute()
+const route = useRoute()
 const video = ref(null)
 const canvas = ref(null) // Referencia al canvas
 
-const { isLoading } = useLive()
+const { 
+  isLoading, 
+  onSubmit,
+  new_emocion
+} = useLive()
 
 // Polyfill para getUserMedia
 navigator.getMedia =
@@ -28,7 +32,7 @@ navigator.getMedia =
   navigator.mozGetUserMedia ||
   navigator.msGetUserMedia
 
-console.log(router.params)
+new_emocion.value.sesions_id = route.params.sesions_id
 
 const cargarCamera = () => {
   if (navigator.getMedia) {
@@ -82,6 +86,9 @@ onMounted(async () => {
           .withAgeAndGender()
           .withFaceDescriptors()
 
+        
+        await onSubmit(detections)
+
         const resizedDetections = faceapi.resizeResults(detections, displaySize)
 
         // Limpiar el canvas
@@ -99,7 +106,7 @@ onMounted(async () => {
             label: `${Math.round(detection.age)} años ${detection.gender}`,
           }).draw(canvasEl)
         })
-      }, 100)
+      }, 5000)
     })
   }
 })
