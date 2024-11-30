@@ -21,6 +21,11 @@ const routes = [
     beforeEnter: [isLogout],
   },
   {
+    path: '/welcome',
+    name: 'welcome',
+    component: () => import('../components/Welcome.vue')
+  },
+  {
     path: "/:pathMatch(.*)",
     component: () => import("../components/PageNotFound.vue"),
   },

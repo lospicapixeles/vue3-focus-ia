@@ -21,7 +21,12 @@ import {
     faVideo,
     faChartPie,
     faFaceSmile,
-    faCircle
+    faCircle,
+    faCamera,
+    faRotateRight,
+    faTicket,
+    faDownload,
+    faShareAlt
 } from "@fortawesome/free-solid-svg-icons"
 
 export default function setupFontAwesomeIcons() {
@@ -47,6 +52,11 @@ export default function setupFontAwesomeIcons() {
         faVideo,
         faChartPie,
         faFaceSmile,
-        faCircle
+        faCircle,
+        faCamera,
+        faRotateRight,
+        faTicket,
+        faDownload,
+        faShareAlt
     );
 }
