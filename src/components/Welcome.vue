@@ -45,7 +45,7 @@
         @click="takePhoto"><fa icon="camera"/> Tomar Foto</button>
       <div 
         v-else
-        class="space-y-2">
+        class="space-y-2 text-center">
         <button 
           @click="getTicket()"
           :disabled="isLoadingProccess"
@@ -57,7 +57,7 @@
           v-if="!isLoadingProccess"
           @click="startCamera()"
           class="bg-rose-500 text-white hover:bg-rose-600 w-full py-2 rounded-xl"><fa icon="rotate-right"/> Tomar otro</button>
-
+        <p v-if="isLoadingProccess" class="text-zinc-500">{{ isLoadingMessage }}</p>      
       </div>
     </div>
     <div 
@@ -77,6 +77,7 @@ import useSystem from '../modules/system/hooks/useSystem'
 import { ref, onMounted } from 'vue';
 import Card3D from './Card3D.vue'
 import { toast } from 'vue3-toastify'
+import confetti from 'canvas-confetti';
 
 const photo = ref(null);
 const emocion = ref({});
@@ -179,6 +180,11 @@ const getTicket = async () => {
     emocion.value = highestEmotion
   
     isTicketComplete.value = true
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
     isLoadingProccess.value = false
 }
 
