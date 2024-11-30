@@ -3,6 +3,7 @@ import routerAulas from '../modules/aulas/router'
 import routerCurso from '../modules/cursos/router'
 import routerSesion from '../modules/sesions/router'
 import routerLive from '../modules/live/router'
+import routerEmocion from '../modules/emociones/router'
 
 export default {
     name: 'home',
@@ -37,6 +38,11 @@ export default {
             mame: 'lives',
             path: '/lives',
             ...routerLive
+        },
+        {
+            name: 'emociones',
+            path: '/emociones',
+            ...routerEmocion
         }
     ]
 }

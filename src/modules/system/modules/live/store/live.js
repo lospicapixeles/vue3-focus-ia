@@ -8,11 +8,21 @@ export const live = defineStore("live", {
     isLoading: false,
     new_emocion: {
       sesions_id: null
-    }
+    },
+    camaras: []
   }),
   actions: {
     async getLives(){
        
+    },
+    async getCamaras(){
+      navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+          this.camaras = devices.filter(device => device.kind === 'videoinput'); // Filtrar solo las cámaras
+        })
+        .catch(error => {
+          console.error('Error al obtener dispositivos:', error);
+        });
     },
     async onSubmit(face){
       const { data } = await systemApi.post('/emociones',  {

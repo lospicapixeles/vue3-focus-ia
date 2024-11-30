@@ -95,6 +95,8 @@
     </div>
   </CardModal>
    <div class="bg-white rounded-xl p-4">
+    <label for=""
+          class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Aulas disponibles</label>
     <Select 
       :options="aulasCombo"
       v-model="new_sesion.aulas_id"

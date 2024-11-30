@@ -5,7 +5,9 @@ const useSystem = () => {
     const storeRef = storeToRefs(system());
 
     return {
-        ...storeRef
+        ...storeRef,
+        getEmociones: system().getEmociones,
+        getEmocionesBySesionsID: system().getEmocionesBySesionsID
     }
 }
 

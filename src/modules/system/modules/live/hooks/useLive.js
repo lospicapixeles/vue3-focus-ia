@@ -6,7 +6,8 @@ const useLive = () => {
 
     return {
         ...storeRef,
-        onSubmit: live().onSubmit
+        onSubmit: live().onSubmit,
+        getCamaras: live().getCamaras
     }
 }
 
