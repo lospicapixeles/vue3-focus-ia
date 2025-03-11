@@ -7,5 +7,10 @@ export default {
             path: '/lives/:uuid/:sesions_id',
             component: () => import('../views/Index.vue'),
         },
+        {
+            name: 'lives.poses',
+            path: '/lives/poses',
+            component: () => import('../views/Poses.vue'),
+        }
     ]
 }

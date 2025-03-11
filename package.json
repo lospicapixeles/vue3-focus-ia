@@ -20,6 +20,8 @@
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@fullcalendar/vue3": "^6.1.15",
+    "@mediapipe/pose": "^0.5.1675469404",
+    "@mediapipe/tasks-vision": "^0.10.22-rc.20250304",
     "@vueuse/core": "^11.3.0",
     "atropos": "^2.0.2",
     "aws-sdk": "^2.1692.0",

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import authApi from '../../../apis/authApi'
-import systemApi from '../../../apis/systemApi'
-import * as jose from 'jose'
+// import systemApi from '../../../apis/systemApi'
+// import * as jose from 'jose'
 
 export const auth = defineStore('auth', {
     state: () => ({
@@ -16,19 +16,11 @@ export const auth = defineStore('auth', {
     }),
     actions: {
         async checkLogin(){
-            const secret = new TextEncoder().encode(import.meta.env.VITE_JWT_SECRET)
             if(localStorage.getItem('_u_')){
                 let user = JSON.parse(localStorage.getItem('_u_'))
-                try{
-                    const jwt = user?.token
-                    const { payload } = await jose.jwtVerify(jwt, secret)
-                    this.user = user?.user
-                    this.isAuth = true
-                    return true
-                }catch(e){
-                    this.logout()
-                    return false;
-                }
+                this.user = user?.user
+                this.isAuth = true
+                return true
             }else{
                 this.logout()
                 return false;
