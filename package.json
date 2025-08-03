@@ -20,7 +20,7 @@
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@fullcalendar/vue3": "^6.1.15",
-    "@vueuse/core": "^11.3.0",
+    "@vueuse/core": "^13.6.0",
     "atropos": "^2.0.2",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.7",

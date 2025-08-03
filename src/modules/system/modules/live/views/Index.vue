@@ -18,6 +18,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useDisplayMedia } from '@vueuse/core';
 import useLive from '../hooks/useLive';
 import { useRoute } from 'vue-router';
 import * as faceapi from 'face-api.js';
@@ -29,6 +30,17 @@ const interval = ref(null);
 
 const { isLoading, onSubmit, new_emocion, getCamaras } = useLive();
 new_emocion.value.sesions_id = route.params.sesions_id;
+
+// Configurar useDisplayMedia para capturar la pantalla
+const {
+  stream,
+  start: startScreenCapture,
+  stop: stopScreenCapture,
+  enabled
+} = useDisplayMedia({
+  video: true,
+  audio: false
+});
 
 const loadModels = async () => {
   const modelsPath = '/models';
@@ -44,14 +56,14 @@ const loadModels = async () => {
   await Promise.all(models);
 };
 
-const startCamera = async () => {
+const startScreen = async () => {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    if (video.value) {
-      video.value.srcObject = stream;
+    await startScreenCapture();
+    if (video.value && stream.value) {
+      video.value.srcObject = stream.value;
     }
   } catch (error) {
-    console.error('Error al acceder a la cámara:', error);
+    console.error('Error al acceder a la pantalla:', error);
   }
 };
 
@@ -95,7 +107,7 @@ onMounted(async () => {
   isLoading.value = false;
 
   if (video.value && canvas.value) {
-    await startCamera();
+    await startScreen();
 
     video.value.addEventListener('play', () => {
       interval.value = setInterval(detectFaces, 5000);
@@ -114,16 +126,15 @@ onUnmounted(() => {
     video.value.removeEventListener('play', detectFaces);
   }
 
-  // Detener todos los tracks de video
-  if (video.value && video.value.srcObject) {
-    const stream = video.value.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach((track) => {
-      track.stop(); // Detener cada track
-    });
+  // Detener la captura de pantalla
+  if (enabled.value) {
+    stopScreenCapture();
+  }
 
-    // Liberar el objeto de la cámara
+  // Liberar el objeto del video
+  if (video.value && video.value.srcObject) {
     video.value.srcObject = null;
-  }});
+  }
+});
 </script>
 
