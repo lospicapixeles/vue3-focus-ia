@@ -10,8 +10,19 @@
       </h1>
     </div>
     <div style="position: relative; display: inline-block;">
-      <video class="rounded-xl w-full" ref="video" style="display: block;" autoplay muted></video>
-      <canvas ref="canvas" class="absolute top-0 left-0"></canvas>
+      <video 
+        class="rounded-xl w-full" 
+        ref="video" 
+        style="display: block;" 
+        autoplay 
+        muted
+        @loadedmetadata="onVideoLoaded"
+      ></video>
+      <canvas 
+        ref="canvas" 
+        class="absolute top-0 left-0 rounded-xl"
+        style="pointer-events: none;"
+      ></canvas>
     </div>
   </div>
 </template>
@@ -67,11 +78,32 @@ const startScreen = async () => {
   }
 };
 
+const onVideoLoaded = () => {
+  if (video.value && canvas.value) {
+    // Ajustar el canvas al tamaño exacto del video mostrado
+    const rect = video.value.getBoundingClientRect();
+    canvas.value.width = rect.width;
+    canvas.value.height = rect.height;
+    canvas.value.style.width = `${rect.width}px`;
+    canvas.value.style.height = `${rect.height}px`;
+  }
+};
+
 const detectFaces = async () => {
   if (!video.value || !canvas.value) return;
 
   const canvasEl = canvas.value;
-  const displaySize = { width: video.value.videoWidth, height: video.value.videoHeight };
+  
+  // Obtener el tamaño real del video mostrado en el DOM
+  const rect = video.value.getBoundingClientRect();
+  const displaySize = { width: rect.width, height: rect.height };
+  
+  // Ajustar canvas al tamaño del video mostrado
+  canvasEl.width = rect.width;
+  canvasEl.height = rect.height;
+  canvasEl.style.width = `${rect.width}px`;
+  canvasEl.style.height = `${rect.height}px`;
+  
   faceapi.matchDimensions(canvasEl, displaySize);
 
   const detections = await faceapi
@@ -83,20 +115,55 @@ const detectFaces = async () => {
 
   await onSubmit(detections);
 
-  const resizedDetections = faceapi.resizeResults(detections, displaySize);
-
-  // Limpiar y redibujar en el canvas
+  // Calcular la escala entre el video original y el mostrado
+  const scaleX = rect.width / video.value.videoWidth;
+  const scaleY = rect.height / video.value.videoHeight;
+  
+  // Limpiar canvas
   const ctx = canvasEl.getContext('2d');
   ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-  faceapi.draw.drawDetections(canvasEl, resizedDetections);
-  faceapi.draw.drawFaceLandmarks(canvasEl, resizedDetections);
-  faceapi.draw.drawFaceExpressions(canvasEl, resizedDetections);
-
-  resizedDetections.forEach((detection) => {
-    const box = detection.detection.box;
-    new faceapi.draw.DrawBox(box, {
-      label: `${Math.round(detection.age)} años ${detection.gender}`,
-    }).draw(canvasEl);
+  
+  // Dibujar detecciones escaladas
+  detections.forEach((detection) => {
+    // Validar que la detección tenga la estructura correcta
+    if (!detection || !detection.detection || !detection.detection.box) {
+      return; // Saltar esta detección si no tiene la estructura esperada
+    }
+    
+    const box = {
+      x: detection.detection.box.x * scaleX,
+      y: detection.detection.box.y * scaleY,
+      width: detection.detection.box.width * scaleX,
+      height: detection.detection.box.height * scaleY
+    };
+    
+    // Dibujar caja de detección
+    ctx.strokeStyle = '#00ff00';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(box.x, box.y, box.width, box.height);
+    
+    // Dibujar landmarks escalados
+    if (detection.landmarks && detection.landmarks.positions) {
+      const landmarks = detection.landmarks.positions.map(point => ({
+        x: point.x * scaleX,
+        y: point.y * scaleY
+      }));
+      
+      ctx.fillStyle = '#ff0000';
+      landmarks.forEach(point => {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+    }
+    
+    // Dibujar etiqueta de edad y género
+    if (detection.age !== undefined && detection.gender) {
+      ctx.fillStyle = '#00ff00';
+      ctx.font = '16px Arial';
+      const label = `${Math.round(detection.age)} años ${detection.gender}`;
+      ctx.fillText(label, box.x, box.y - 5);
+    }
   });
 };
 
@@ -112,6 +179,9 @@ onMounted(async () => {
     video.value.addEventListener('play', () => {
       interval.value = setInterval(detectFaces, 5000);
     });
+    
+    // Agregar listener para redimensionar canvas cuando cambie el tamaño del video
+    window.addEventListener('resize', onVideoLoaded);
   }
 });
 
@@ -125,6 +195,9 @@ onUnmounted(() => {
   if (video.value) {
     video.value.removeEventListener('play', detectFaces);
   }
+  
+  // Remover listener de resize
+  window.removeEventListener('resize', onVideoLoaded);
 
   // Detener la captura de pantalla
   if (enabled.value) {
