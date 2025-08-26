@@ -157,12 +157,52 @@ const detectFaces = async () => {
       });
     }
     
-    // Dibujar etiqueta de edad y género
+    // Dibujar etiqueta de edad, género y emoción
     if (detection.age !== undefined && detection.gender) {
       ctx.fillStyle = '#00ff00';
-      ctx.font = '16px Arial';
-      const label = `${Math.round(detection.age)} años ${detection.gender}`;
-      ctx.fillText(label, box.x, box.y - 5);
+      ctx.font = '14px Arial';
+      
+      // Obtener la emoción predominante
+      let emotionText = '';
+      if (detection.expressions) {
+        const emotions = Object.entries(detection.expressions);
+        const dominantEmotion = emotions.reduce((prev, current) => 
+          current[1] > prev[1] ? current : prev
+        );
+        
+        // Traducir emociones al español
+        const emotionTranslations = {
+          'happy': 'Feliz',
+          'sad': 'Triste',
+          'angry': 'Enojado',
+          'fearful': 'Temeroso',
+          'disgusted': 'Disgustado',
+          'surprised': 'Sorprendido',
+          'neutral': 'Neutral'
+        };
+        
+        emotionText = emotionTranslations[dominantEmotion[0]] || dominantEmotion[0];
+        const emotionPercentage = Math.round(dominantEmotion[1] * 100);
+        emotionText += ` (${emotionPercentage}%)`;
+      }
+      
+      // Mostrar información en múltiples líneas
+      const ageGenderLabel = `${Math.round(detection.age)} años ${detection.gender}`;
+      
+      // Dibujar fondo semitransparente para mejor legibilidad
+      const textHeight = 32; // Altura para dos líneas de texto
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(box.x, box.y - textHeight - 5, Math.max(ageGenderLabel.length * 8, emotionText.length * 8), textHeight);
+      
+      // Dibujar texto de edad y género
+      ctx.fillStyle = '#00ff00';
+      ctx.fillText(ageGenderLabel, box.x + 2, box.y - 20);
+      
+      // Dibujar texto de emoción
+      if (emotionText) {
+        ctx.fillStyle = '#ffff00'; // Amarillo para emociones
+        ctx.fillText(emotionText, box.x + 2, box.y - 5);
+      }
     }
   });
 };
