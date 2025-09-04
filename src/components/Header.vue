@@ -4,7 +4,7 @@
       <Menubar :model="items">
         <template #end>
           <div class="flex items-center gap-2">
-            <Avatar label="A" shape="circle" />
+            <Avatar @click="toggle" label="A" shape="circle" />
           </div>
         </template>
       </Menubar>
@@ -15,17 +15,25 @@
       </div>
     </div>
   </div>
+  <Menu :model="items_menu" popup ref="menu" />
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import Menubar from 'primevue/menubar';
+import Menu from 'primevue/menu';
 import Avatar from 'primevue/avatar';
 import Panel from 'primevue/panel';
 import rutas from '../modules/system/router';
 import { useRouter } from 'vue-router';
+import useAuth from '../modules/auth/hooks/useAuth';
 
 const router = useRouter()
+const menu = ref(null);
+
+const {
+  onLogout
+} = useAuth()
 
 function capitalizar(texto = '') {
   if (!texto) return '';
@@ -33,6 +41,20 @@ function capitalizar(texto = '') {
 }
 
 const items = ref([])
+const items_menu = ref([
+  {
+    label: 'Perfil',
+    icon: 'pi pi-user',
+    
+  },
+  {
+    label: 'Salir',
+    icon: 'pi pi-sign-out',
+    command: () => {
+      onLogout()
+    }
+  }
+])
 
 rutas.children.forEach(ruta => {
   items.value.push({
@@ -46,7 +68,9 @@ rutas.children.forEach(ruta => {
 
 })
 
-
+const toggle = (event) => {
+  menu.value.toggle(event);
+};
 
 </script>
 
