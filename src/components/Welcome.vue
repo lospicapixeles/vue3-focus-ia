@@ -76,7 +76,7 @@
 import useSystem from '../modules/system/hooks/useSystem'
 import { ref, onMounted } from 'vue';
 import Card3D from './Card3D.vue'
-import { toast } from 'vue3-toastify'
+import { toast } from 'vue-sonner'
 import confetti from 'canvas-confetti';
 
 const photo = ref(null);

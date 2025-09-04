@@ -11,36 +11,43 @@ export default {
     children: [
         {
             name: 'principal',
+            icon: 'pi pi-home',
             path: '/',
             component: () => import('../views/Home.vue')
         },
         {
             name: 'usuarios',
+            icon: 'pi pi-users',
             path: '/usuarios',
             ...routerUsuarios
         },
         {
             name: 'aulas',
+            icon: 'pi pi-building',
             path: '/aulas',
             ...routerAulas
         },
         {
             name: 'cursos',
+            icon: 'pi pi-book',
             path: '/cursos',
             ...routerCurso
         },
         {
             name: 'sesions',
+            icon: 'pi pi-clock',
             path: '/horarios',
             ...routerSesion
         },
         {
             mame: 'lives',
+            icon: 'pi pi-video',
             path: '/lives',
             ...routerLive
         },
         {
             name: 'emociones',
+            icon: 'pi pi-face-smile',
             path: '/emociones',
             ...routerEmocion
         }

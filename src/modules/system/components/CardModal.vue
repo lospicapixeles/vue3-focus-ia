@@ -11,7 +11,7 @@
                 <button
                     type="button"
                     @click="close()">
-                    <fa icon="xmark"/>
+                    <i class="pi pi-times"></i>
                 </button>
             </header>
             <!-- Modal body -->

@@ -20,6 +20,7 @@
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@fullcalendar/vue3": "^6.1.15",
+    "@primeuix/themes": "^1.2.3",
     "@vueuse/core": "^13.6.0",
     "atropos": "^2.0.2",
     "aws-sdk": "^2.1692.0",
@@ -32,11 +33,14 @@
     "jose": "^5.9.6",
     "nprogress": "^0.2.0",
     "pinia": "^2.2.6",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.3.8",
     "uuid": "^11.0.3",
     "vue": "^3.5.12",
     "vue-awesome-paginate": "^1.2.0",
     "vue-chart-3": "^3.1.8",
     "vue-router": "4",
+    "vue-sonner": "^2.0.8",
     "vue3-toastify": "^0.2.4"
   },
   "devDependencies": {

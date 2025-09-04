@@ -14,14 +14,12 @@
                     next-button-class="bg-zinc-100 dark:bg-zinc-700 transition-all duration-300">
                     <template #prev-button>
                         <span>
-                            <fa icon="caret-left"
-                                class="text-zinc-700 dark:text-zinc-200 transition-all duration-300" />
+                            <i class="pi pi-caret-left text-zinc-700 dark:text-zinc-200 transition-all duration-300" />
                         </span>
                     </template>
                     <template #next-button>
                         <span>
-                            <fa icon="caret-right"
-                                class="text-zinc-700 dark:text-zinc-200 transition-all duration-300" />
+                            <i class="pi pi-caret-right text-zinc-700 dark:text-zinc-200 transition-all duration-300" />
                         </span>
                     </template>
                 </vue-awesome-paginate>

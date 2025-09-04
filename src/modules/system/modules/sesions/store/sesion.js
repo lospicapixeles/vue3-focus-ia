@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import systemApi from "../../../../../apis/systemApi";
-import { toast } from 'vue3-toastify'
+import { toast } from 'vue-sonner'
 import format from 'date-fns/format'
 
 export const sesion = defineStore("sesion", {

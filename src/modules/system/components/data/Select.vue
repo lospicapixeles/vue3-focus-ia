@@ -16,17 +16,17 @@
                         <button @click="open = !open,result = props.options, input.focus()" type="button"
                             :disabled="props.disabled"
                             class="hidden md:inline-block cursor-pointer w-8 h-6 text-gray-600 dark:text-gray-300 outline-none focus:outline-none transition-all duration-300">
-                            <fa v-if="!open" icon="caret-down" class="" />
-                            <fa v-else icon="caret-up" class="" />
+                            <i v-if="!open" class="pi pi-caret-down" />
+                            <i v-else class="pi pi-caret-up" />
                         </button>
                         <button v-if="!open" @click="open = !open,result = props.options, input.focus()"
                             :disabled="props.disabled" type="button"
                             class="inline-block md:hidden cursor-pointer w-8 h-6 text-gray-600 dark:text-gray-300 outline-none focus:outline-none transition-all duration-300">
-                            <fa icon="caret-down" class="" />
+                            <i class="pi pi-caret-down" />
                         </button>
                         <button v-if="open" @click="onSearch()" :disabled="props.disabled" type="button"
                             class="inline-block md:hidden">
-                            <fa icon="search" />
+                            <i class="pi pi-search" />
                         </button>
                     </label>
                 </div>
@@ -70,7 +70,7 @@
                     <li class="text-gray-500 text-sm">🤔 No hay datos</li>
                     <div v-if="add" class="py-2">
                         <button type="button" @click="addItem()" class="text-skin-success">
-                            <fa icon="plus" /> Nuevo
+                            <i class="pi pi-plus" /> Nuevo
                         </button>
                     </div>
                 </ul>
@@ -81,7 +81,7 @@
             @click="onReload()"
             class="bg-blue-500 px-2 rounded-md text-white" :disabled="disabled"
             :class="{ 'opacity-50': disabled }" type="button">
-            <fa :spin="disabled" icon="sync" />
+            <i :spin="disabled" class="pi pi-sync" />
         </button>
     </div>
 </template>

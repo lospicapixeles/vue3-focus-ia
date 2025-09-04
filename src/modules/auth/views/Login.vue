@@ -13,33 +13,18 @@
         </div>
         <div class="mt-4">
             <label class="text-sm text-zinc-600">Correo</label>
-            <input
-                v-model="auth.email"
-                type="email"
-                class="w-full rounded-lg dark:bg-zinc-900 dark:border-zinc-700 dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200"
-            />
+            <InputText v-model="auth.email" fluid="" type="email" />
         </div>
         <div class="my-2">
             <label class="text-sm text-zinc-600">Contraseña</label>
-            <input
-                v-model="auth.password"
-                @keypress.enter="onAuth()"
-                class="w-full rounded-lg dark:bg-zinc-900 dark:border-zinc-700 dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200"
-                type="password"
-            />
+            <InputText v-model="auth.password" fluid="" type="password" @keypress.enter="onAuth()"/>
         </div>
         <div>
             <!-- Mensaje de errores -->
             <p v-if="auth.error" class="text-xs text-red-500">{{ auth.error }}</p>
         </div>
         <div class="mt-4 space-y-2">
-            <button
-                :disabled="isLoading"
-                :class="isLoading ? 'opacity-50 cursor-not-allowed' : ''"
-                @click="onAuth()"
-                class="w-full py-2 text-center bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black rounded-md">
-                Acceder
-            </button>
+            <Button label="Acceder" fluid="" @click="onAuth()" :loading="isLoading"/>
             <p class="text-sm dark:text-zinc-400">Si no tiene credenciales, <RouterLink to="/auth/register" class="text-sky-500 hover:underline">Registrese</RouterLink></p>
         </div>
     </div>
@@ -48,6 +33,8 @@
 
 <script setup>
 import useAuth from '../hooks/useAuth'
+import InputText from 'primevue/inputtext'
+import Button from 'primevue/button'
 
 const {
     isLoading,

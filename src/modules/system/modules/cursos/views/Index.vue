@@ -37,10 +37,9 @@
             </div>
         </div>
   </CardModal>
-  <div class="bg-white p-4 rounded-xl">
+  <div class="bg-white rounded-xl">
         <div>
-            <h1 class="text-zinc-800 font-medium text-xl">Cursos 📚</h1>
-            <label class="text-zinc-600 text-sm">Administrar cursos</label>
+            <h1 class="text-zinc-800 font-bold text-xl">Cursos 📚</h1>
         </div>
         <div class="mt-2 flex justify-between">
         <input type="text" 
@@ -59,7 +58,7 @@
           <div class="flex items-center space-x-2">
             <button
               @click="onDelete(curso.id)"
-              class="text-rose-500 text-lg"><fa icon="trash-alt"/></button>
+              class="text-rose-500 text-lg"><i class="pi pi-trash"/></button>
           </div>
         </div>
       </div>

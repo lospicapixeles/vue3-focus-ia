@@ -1,38 +1,51 @@
 <template>
-    <div class="flex flex-wrap">
-      <Sidebar 
-        v-if="openSidebar"
-      />
-      <div 
-        :class="!openSidebar ? 'w-full' : 'w-full lg:w-3/4 xl:w-4/5 xxl:w-5/6'">
-        <header class="bg-white z-[10] border-b dark:bg-zinc-800/30 backdrop-blur-md sticky top-0 px-4 flex justify-between items-center py-2">
-            <div class="text-zinc-800 dark:text-zinc-200">
-                <button
-                  @click="openSidebar = !openSidebar"
-                >
-                  <fa :icon="openSidebar ? 'angles-left' :'bars'"/>
-                </button>
-                <router-link to="/" class="ml-2 text-lg font-bold text-zinc-800 dark:text-zinc-200">Dashboard</router-link>
-            </div>
-            <DropUser />
-        </header>
-        <div class="overflow-y-auto h-screen p-4">
+  <div class="flex flex-wrap">
+    <div class="w-full p-4">
+      <Menubar :model="items">
+        <template #end>
+          <div class="flex items-center gap-2">
+            <Avatar label="A" shape="circle" />
+          </div>
+        </template>
+      </Menubar>
+      <div class="overflow-y-auto">
+        <Panel class="mt-4">
           <slot />
-        </div>
+        </Panel>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
-import useSystem from '../modules/system/hooks/useSystem'
-//components
-import Sidebar from './Sidebar.vue';
-import DropUser from './DropUser.vue';
+import { ref } from 'vue';
+import Menubar from 'primevue/menubar';
+import Avatar from 'primevue/avatar';
+import Panel from 'primevue/panel';
+import rutas from '../modules/system/router';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 
-const {
-  openSidebar,
-} = useSystem();
+function capitalizar(texto = '') {
+  if (!texto) return '';
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+const items = ref([])
+
+rutas.children.forEach(ruta => {
+  items.value.push({
+    label: capitalizar(ruta.name),
+    icon: ruta?.icon,
+    to: ruta.path,
+    command: () => {
+      router.push(ruta.path)
+    }
+  })
+
+})
+
 
 
 </script>

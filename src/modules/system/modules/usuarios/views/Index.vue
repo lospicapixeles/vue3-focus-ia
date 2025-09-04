@@ -38,7 +38,7 @@
                         class="w-full hover:border-blue-500 dark:hover:border-blue-500 cursor-pointer text-center border-2 border-dashed p-2 rounded-md dark:border-gray-700 bg-gray-100 dark:bg-gray-800 transition-all duration-300">
                         <h1 class="text-gray-700 dark:text-gray-300 transition-all duration-300">Has click para
                             subir un archivo
-                            <fa icon="cloud-arrow-up" />
+                            <i class="pi pi-cloud-upload" />
                         </h1>
                     </div>
                     <div v-else>
@@ -63,19 +63,19 @@
             </div>
         </div>
     </CardModal>
-    <div class="bg-white p-4 rounded-xl">
-        <div>
-            <h1 class="text-zinc-800 font-medium text-xl">Usuarios</h1>
-            <label class="text-zinc-600 text-sm">Administrar acceso de usuarios</label>
-        </div>
-        <div class="mt-2 flex justify-between">
-            <input type="text" 
+    <div class="">
+        <h1 class="font-bold text-xl">Usuarios</h1>
+        <div class="mt-2 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+            <InputText 
                 v-model="pag.buscar"
                 @keypress.enter="changePage(1)"
                 placeholder="Buscar usuario"
-                class="rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
-            <button @click="newUsuario"
-                class="py-2 px-3 text-center bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 text-white rounded-lg">Nuevo</button>
+                />
+            <Button 
+                label="Nuevo"
+                icon="pi pi-plus"
+                @click="newUsuario()"
+                />
         </div>
         <div class="w-full mt-4">
             <Table :total="pag.total" :cant_reg="pag.cant_reg" :nro_pag="pag.page" @change-page="changePage">
@@ -106,17 +106,17 @@
                             </td>
                             <td class="px-2 py-1 text-zinc-700 transition-all duration-300">
                                 <div class="flex space-x-2 items-center">
-                                    <fa icon="envelope" /> <span>{{ usuario.email }}</span>
+                                    <i class="pi pi-envelope" /> <span>{{ usuario.email }}</span>
                                 </div>
                             </td>
                             <td class="px-2 py-1 text-zinc-700 transition-all duration-300">{{
                                 usuario.rol }}</td>
                             <td class="px-2 py-1 text-zinc-700 transition-all duration-300">
                                 <div class="flex justify-end items-center space-x-2">
-                                    <button class="text-zinc-900 text-lg"><fa icon="pen-to-square"/></button>
+                                    <button class="text-zinc-900 text-lg"><i class="pi pi-pen-to-square"/></button>
                                     <button
                                         @click="onDelete(usuario.id)"
-                                        class="text-rose-500 text-lg"><fa icon="trash-alt"/></button>
+                                        class="text-rose-500 text-lg"><i class="pi pi-trash"/></button>
                                 </div>
                             </td>
                         </tr>
@@ -142,7 +142,8 @@ import {
     uploadFileToS3,
     deleteFileFromS3
 } from '../../../../../lib/aws'
-import baseURL from '../../../../../apis/baseURL'
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 
 const image = ref(null);
 const src_image_temp = ref(null);

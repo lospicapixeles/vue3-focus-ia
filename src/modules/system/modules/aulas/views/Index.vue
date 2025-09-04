@@ -28,19 +28,21 @@
             </div>
         </div>
     </CardModal>
-    <div class="bg-white p-4 rounded-xl">
+    <div class="rounded-xl">
         <div>
-            <h1 class="text-zinc-800 font-medium text-xl">Aulas</h1>
-            <label class="text-zinc-600 text-sm">Administrar aulas de la institución</label>
+            <h1 class="font-bold text-xl">Aulas</h1>
         </div>
-        <div class="mt-2 flex justify-between">
-            <input type="text" 
+        <div class="mt-2 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+            <InputText 
                 v-model="pag.buscar"
                 @keypress.enter="changePage(1)"
-                placeholder="Buscar aulas"
-                class="rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
-            <button @click="newAula"
-                class="py-2 px-3 text-center bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 text-white rounded-lg">Nuevo</button>
+                placeholder="Buscar usuario"
+                />
+            <Button 
+                label="Nuevo"
+                icon="pi pi-plus"
+                @click="newAula()"
+                />
         </div>
         <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
              <div v-for="aula in aulas" :key="aula" class="bg-yellow-100 rounded-lg shadow-md p-4">
@@ -49,7 +51,7 @@
                 <div class="flex items-center space-x-2">
                     <button
                         @click="onDelete(aula.id)"
-                        class="text-rose-500 text-lg"><fa icon="trash-alt"/></button>
+                        class="text-rose-500 text-lg"><i class="pi pi-trash"/></button>
                 </div>
             </div>
         </div>   
@@ -59,6 +61,8 @@
 <script setup>
 import useAula from '../hooks/useAula'
 import CardModal from '../../../components/CardModal.vue'
+import InputText from 'primevue/inputtext'
+import Button from 'primevue/button'
 
 const {
     isLoading,

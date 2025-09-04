@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-zinc-100 dark:bg-black">
+    <div class="">
         <Header>
             <RouterView />
         </Header>
