@@ -21,8 +21,8 @@ const pinia = createPinia()
 const app = createApp(App)
 
 app
-  .use(router)
   .use(pinia)
+  .use(router)
   .use(PrimeVue, {
     theme: {
       preset: Aura,
