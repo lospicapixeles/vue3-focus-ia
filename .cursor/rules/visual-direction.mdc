@@ -1,0 +1,34 @@
+---
+description: Dirección visual obligatoria para interfaces frontend
+globs: "**/*.{tsx,jsx,vue,svelte,css,scss}"
+alwaysApply: true
+---
+
+# Dirección visual
+
+Antes de implementar una interfaz:
+
+1. Examina los componentes, estilos y tokens existentes.
+2. Conserva la identidad visual del producto.
+3. Define una dirección visual concreta, no una mezcla de tendencias.
+4. Usa variables o tokens para colores, espaciado, tipografía y radios.
+5. Diseña primero la jerarquía, composición y estados; después los detalles.
+
+## Evitar
+
+- Landing pages genéricas con hero centrado y tres tarjetas.
+- Gradientes morados o azules utilizados sin una razón de marca.
+- Exceso de tarjetas flotantes, sombras y bordes redondeados.
+- Iconos decorativos inconsistentes.
+- Textos de relleno como “Unlock your potential”.
+- Animaciones en todos los elementos.
+- Copiar automáticamente el estilo típico de una startup SaaS.
+
+## Requisitos
+
+- La interfaz debe tener una característica visual reconocible.
+- Debe existir una jerarquía tipográfica clara.
+- Cada componente debe incluir estados hover, focus, loading, empty y error cuando correspondan.
+- El contraste y la navegación mediante teclado deben ser accesibles.
+- El diseño debe funcionar en móvil y escritorio.
+- Reutiliza componentes existentes antes de crear otros nuevos.
