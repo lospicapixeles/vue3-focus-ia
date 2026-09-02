@@ -1,153 +1,171 @@
 <template>
-    <CardModal :showing="openModal" @close="openModal = false" title="Nuevo usuario">
-        <div class="flex flex-wrap">
-            <div class="w-full">
-                <label for=""
-                    class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Nombres</label>
-                <input type="text" 
-                    v-model="new_usuario.name"
-                    placeholder="Nombre usuario"
-                    class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
+    <CardModal :showing="openModal" @close="openModal = false" :title="new_usuario.id ? 'Editar usuario' : 'Nuevo usuario'">
+        <form class="grid grid-cols-1 gap-4 md:grid-cols-2" @submit.prevent="onSubmit()">
+            <div class="flex flex-col gap-2 md:col-span-2">
+                <label for="usuario-nombre" class="text-sm font-medium text-ink">Nombres</label>
+                <InputText id="usuario-nombre" v-model="new_usuario.name" fluid placeholder="Nombre completo" />
             </div>
-            <div class="w-full md:w-1/2 md:pr-2 pr-0">
-                <label for=""
-                    class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Correo</label>
-                <input type="email" 
-                    v-model="new_usuario.email"
-                    placeholder=""
-                    class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
+            <div class="flex flex-col gap-2">
+                <label for="usuario-correo" class="text-sm font-medium text-ink">Correo</label>
+                <InputText id="usuario-correo" v-model="new_usuario.email" type="email" fluid placeholder="correo@institucion.edu" />
             </div>
-            <div class="w-full md:w-1/2 pr-0">
-                <label for="" class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Rol</label>
-                <select
+            <div class="flex flex-col gap-2">
+                <label for="usuario-rol" class="text-sm font-medium text-ink">Rol</label>
+                <Select
+                    id="usuario-rol"
                     v-model="new_usuario.rol"
-                    class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200">
-                    <option value="admin">Administrador</option>
-                    <option value="alumno">Alumno</option>
-                    <option value="docente">Docente</option>
-                    <option value="padres">Padres</option>
-                </select>
+                    :options="roles"
+                    optionLabel="label"
+                    optionValue="value"
+                    fluid
+                />
             </div>
-            <div class="w-full md:w-1/2 md:pr-2 pr-0">
-                <label for="foto" class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Foto</label>
-                <label for="foto">
-                    <input @change="subirFotoAws" type="file" id="foto" hidden class="w-full">
+            <div class="md:col-span-2">
+                <p class="mb-2 text-sm font-medium text-ink">Foto para reconocimiento</p>
+                <label for="foto" class="block cursor-pointer">
+                    <input @change="subirFotoAws" type="file" id="foto" accept="image/*" hidden />
                     <div
                         v-if="!new_usuario.face_image"
-                        for="foto"
-                        class="w-full hover:border-blue-500 dark:hover:border-blue-500 cursor-pointer text-center border-2 border-dashed p-2 rounded-md dark:border-gray-700 bg-gray-100 dark:bg-gray-800 transition-all duration-300">
-                        <h1 class="text-gray-700 dark:text-gray-300 transition-all duration-300">Has click para
-                            subir un archivo
-                            <i class="pi pi-cloud-upload" />
-                        </h1>
+                        class="rounded-2xl border border-dashed border-muted-line bg-paper px-4 py-8 text-center text-sm text-muted hover:border-accent"
+                    >
+                        Haz clic para subir un archivo
+                        <i class="pi pi-cloud-upload ml-1" aria-hidden="true" />
                     </div>
-                    <div v-else>
-                        <h1 class="text-gray-700 dark:text-gray-300 transition-all duration-300">
+                    <div v-else class="space-y-2">
+                        <p class="text-sm text-muted">
                             {{ isLoading ? isLoadingMessage : 'Imagen cargada' }}
-                        </h1>
-                        <div style="position: relative; display: inline-block;">
-                            <img ref="image" :src="src_image_temp" style="display: block;" />
-                            <canvas ref="canvas" style="position: absolute; top: 0; left: 0;"></canvas>
+                        </p>
+                        <div class="relative inline-block">
+                            <img ref="image" :src="src_image_temp" alt="Vista previa del rostro" class="block max-h-48 rounded-xl" />
+                            <canvas ref="canvas" class="absolute left-0 top-0"></canvas>
                         </div>
                     </div>
                 </label>
             </div>
-            <div class="mt-2 w-full">
-                <button
-                :disabled="isLoading"
-                :class="isLoading ? 'opacity-50 cursor-not-allowed' : ''"
-                @click="onSubmit()"
-                class="p-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black rounded-md">
-                Guardar
-                </button>
+            <div class="md:col-span-2 flex justify-end">
+                <Button
+                    type="submit"
+                    label="Guardar"
+                    icon="pi pi-check"
+                    :loading="isLoading"
+                    :disabled="isLoading"
+                />
             </div>
-        </div>
+        </form>
     </CardModal>
-    <div class="">
-        <h1 class="font-bold text-xl">Usuarios</h1>
-        <div class="mt-2 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
-            <InputText 
-                v-model="pag.buscar"
-                @keypress.enter="changePage(1)"
-                placeholder="Buscar usuario"
-                />
-            <Button 
-                label="Nuevo"
-                icon="pi pi-plus"
-                @click="newUsuario()"
-                />
-        </div>
-        <div class="w-full mt-4">
-            <Table :total="pag.total" :cant_reg="pag.cant_reg" :nro_pag="pag.page" @change-page="changePage">
-                <table class="w-full table-fixed xxl:table-auto border border-gray-100 rounded-lg overflow-hidden"
-                    style="border-collapse: separate; border-spacing: 0;">
-                    <!-- Encabezado de la tabla -->
-                    <thead>
-                        <tr
-                            class="text-sm sticky top-0 z-[4] text-zinc-700 bg-zinc-200 dark:bg-zinc-700 dark:text-white transition-all duration-300">
-                            <th class="py-1 px-2 text-left w-[150px]">Nombre</th>
-                            <th class="py-1 px-2 text-left w-[200px]">Correo</th>
-                            <th class="py-1 px-2 text-left w-[100px]">Rol</th>
-                            <th class="py-1 px-2 text-left w-[80px]"></th>
-                        </tr>
-                    </thead>
-                    <!-- Cuerpo de la tabla -->
-                    <tbody>
-                        <tr v-for="usuario in usuarios" :key="usuario"
-                            class="hover:bg-zinc-100 cursor-default dark:hover:bg-zinc-800 transition-all duration-300">
-                            <td class="px-2 py-1 text-zinc-700 transition-all duration-300">
-                                <div class="w-full flex space-x-2 items-center">
-                                    <div :style="{ backgroundColor: usuario.color ?? '#000' }"
-                                        class="w-[30px] h-[30px] border-2 flex items-center text-sm justify-center border-white text-white rounded-full dark:border-gray-800">
-                                        {{ usuario.name.charAt(0) }}
-                                    </div>
-                                    <span>{{ usuario.name }}</span>
-                                </div>
-                            </td>
-                            <td class="px-2 py-1 text-zinc-700 transition-all duration-300">
-                                <div class="flex space-x-2 items-center">
-                                    <i class="pi pi-envelope" /> <span>{{ usuario.email }}</span>
-                                </div>
-                            </td>
-                            <td class="px-2 py-1 text-zinc-700 transition-all duration-300">{{
-                                usuario.rol }}</td>
-                            <td class="px-2 py-1 text-zinc-700 transition-all duration-300">
-                                <div class="flex justify-end items-center space-x-2">
-                                    <button class="text-zinc-900 text-lg"><i class="pi pi-pen-to-square"/></button>
-                                    <button
-                                        @click="onDelete(usuario.id)"
-                                        class="text-rose-500 text-lg"><i class="pi pi-trash"/></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr v-if="!usuarios.length">
-                            <td class="px-2 py-2 text-center text-sm text-zinc-500 transition-all duration-300"
-                                colspan="3">No hay usuarios registrados</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </Table>
-        </div>
 
-    </div>
+    <PageHeader
+        kicker="02  ·  Gestión"
+        title="Usuarios"
+        description="Personas del observatorio: docentes, alumnos y administración."
+    >
+        <template #actions>
+            <IconField>
+                <InputIcon class="pi pi-search" />
+                <InputText
+                    v-model="pag.buscar"
+                    @keypress.enter="changePage(1)"
+                    placeholder="Buscar usuario"
+                    aria-label="Buscar usuario"
+                />
+            </IconField>
+            <Button label="Nuevo" icon="pi pi-plus" @click="newUsuario()" />
+        </template>
+    </PageHeader>
+
+    <DataTable
+        :value="usuarios"
+        dataKey="id"
+        stripedRows
+        class="overflow-hidden rounded-2xl"
+        responsiveLayout="scroll"
+    >
+        <template #empty>
+            <p class="py-6 text-center text-sm text-muted">No hay usuarios registrados.</p>
+        </template>
+        <Column header="Nombre">
+            <template #body="{ data }">
+                <div class="flex items-center gap-3">
+                    <span
+                        class="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-white"
+                        :style="{ backgroundColor: data.color ?? '#171714' }"
+                        aria-hidden="true"
+                    >
+                        {{ data.name?.charAt(0) }}
+                    </span>
+                    <span>{{ data.name }}</span>
+                </div>
+            </template>
+        </Column>
+        <Column field="email" header="Correo" />
+        <Column header="Rol">
+            <template #body="{ data }">
+                <Tag :value="data.rol" rounded severity="secondary" />
+            </template>
+        </Column>
+        <Column header="" style="width: 7rem">
+            <template #body="{ data }">
+                <div class="flex justify-end gap-1">
+                    <Button
+                        icon="pi pi-pencil"
+                        rounded
+                        text
+                        aria-label="Editar usuario"
+                        v-tooltip.top="'Editar'"
+                        @click="editUsuario(data)"
+                    />
+                    <Button
+                        icon="pi pi-trash"
+                        rounded
+                        text
+                        severity="danger"
+                        aria-label="Eliminar usuario"
+                        v-tooltip.top="'Eliminar'"
+                        @click="confirmDelete(data)"
+                    />
+                </div>
+            </template>
+        </Column>
+    </DataTable>
+
+    <Paginator
+        v-if="pag.total > pag.cant_reg"
+        class="mt-3"
+        :rows="pag.cant_reg"
+        :totalRecords="pag.total"
+        :first="(pag.page - 1) * pag.cant_reg"
+        @page="onPage"
+    />
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import useUsuario from '../hooks/useUsuario';
-import Table from '../../../components/data/Table.vue';
 import CardModal from '../../../components/CardModal.vue'
+import PageHeader from '../../../../../components/PageHeader.vue'
 import { v4 as uuidv4 } from 'uuid';
 import {
     uploadFileToS3,
-    deleteFileFromS3
 } from '../../../../../lib/aws'
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
-
+import Select from 'primevue/select';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Tag from 'primevue/tag';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+import Paginator from 'primevue/paginator';
 const image = ref(null);
 const src_image_temp = ref(null);
 const canvas = ref(null);
+
+const roles = [
+    { label: 'Administrador', value: 'admin' },
+    { label: 'Alumno', value: 'alumno' },
+    { label: 'Docente', value: 'docente' },
+    { label: 'Padres', value: 'padres' },
+]
 
 const {
     openModal,
@@ -167,10 +185,25 @@ const changePage = async (e) => {
     await getUsuarios();
 }
 
+const onPage = async (event) => {
+    await changePage(event.page + 1)
+}
+
 const newUsuario = () => {
     resetForm()
     openModal.value = true;
-} 
+}
+
+const editUsuario = (usuario) => {
+    new_usuario.value = { ...usuario }
+    openModal.value = true
+}
+
+const confirmDelete = (usuario) => {
+    if (window.confirm(`¿Eliminar a ${usuario.name}?`)) {
+        onDelete(usuario.id)
+    }
+}
 
 const getDescriptorFace = async () => {
     isLoading.value = true;
@@ -178,21 +211,18 @@ const getDescriptorFace = async () => {
 
     const faceapi = await import('face-api.js');
 
-    // Cargar los modelos necesarios
     await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
     await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
     await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
 
     isLoadingMessage.value = 'Detectando rostros...'
 
-    // Detectar las caras con puntos y expresiones
     const detections = await faceapi.detectAllFaces(image.value)
         .withFaceLandmarks()
         .withFaceDescriptors();
 
     isLoadingMessage.value = 'Dibujando rostros...'
 
-    //Dibujar las detecciones en el canvas
     const displaySize = { width: image.value.width, height: image.value.height };
     canvas.value.width = displaySize.width;
     canvas.value.height = displaySize.height;
@@ -200,17 +230,14 @@ const getDescriptorFace = async () => {
     faceapi.matchDimensions(canvas.value, displaySize);
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
-    // Limpiar el canvas antes de dibujar
     const context = canvas.value.getContext('2d');
     context.clearRect(0, 0, canvas.value.width, canvas.value.height);
 
-    // Dibujar cuadros alrededor de las caras y etiquetas con expresiones
     faceapi.draw.drawDetections(canvas.value, resizedDetections);
     faceapi.draw.drawFaceLandmarks(canvas.value, resizedDetections);
     
     const facesData = detections.map(detection => ({
         descriptor: detection.descriptor,
-        // Otras propiedades opcionales como boundingBox, landmarks, etc.
     }));
 
     isLoading.value = false;
@@ -219,7 +246,6 @@ const getDescriptorFace = async () => {
 }
 
 const subirFotoAws = async (e) => {
-
     src_image_temp.value = URL.createObjectURL(e.target.files[0]);
     new_usuario.value.face_image = e.target.files[0];
 

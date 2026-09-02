@@ -1,17 +1,17 @@
 <template>
     <div class="">
-        <div class="bg-white rounded-md dark:bg-zinc-900 transition-all duration-300">
+        <div class="overflow-hidden rounded-2xl border border-muted-line bg-surface">
             <div style="max-height: calc( 100vh - 185px );"
-                class="overflow-x-auto relative scrollbar scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800 scrollbar-track-white dark:scrollbar-track-zinc-900 transition-all duration-300">
+                class="relative overflow-x-auto">
                 <slot />
             </div>
-            <div class="py-2">
+            <div class="border-t border-muted-line px-3 py-2">
                 <vue-awesome-paginate :total-items="total" :items-per-page="cant_reg" :max-pages-shown="4"
                     v-model="nro_pag_ref" :on-click="onChangePage"
-                    paginate-buttons-class="px-2 inline-flex rounded mx-1 hover:text-zinc-700 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700 dark:hover:text-zinc-300 h-8 sm:h-auto flex items-center transition-all duration-300"
-                    active-page-class="bg-blue-500 text-white dark:bg-blue-500 dark:text-white transition-all duration-300"
-                    back-button-class="bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 transition-all duration-300"
-                    next-button-class="bg-zinc-100 dark:bg-zinc-700 transition-all duration-300">
+                    paginate-buttons-class="px-2 mx-1 inline-flex h-8 items-center rounded-full text-ink hover:bg-accent-soft"
+                    active-page-class="bg-accent text-white hover:bg-accent-dark"
+                    back-button-class="bg-paper hover:bg-accent-soft"
+                    next-button-class="bg-paper hover:bg-accent-soft">
                     <template #prev-button>
                         <span>
                             <i class="pi pi-caret-left text-zinc-700 dark:text-zinc-200 transition-all duration-300" />

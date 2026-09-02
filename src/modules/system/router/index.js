@@ -40,9 +40,10 @@ export default {
             ...routerSesion
         },
         {
-            mame: 'lives',
+            name: 'lives',
             icon: 'pi pi-video',
             path: '/lives',
+            hidden: true,
             ...routerLive
         },
         {

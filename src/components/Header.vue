@@ -3,9 +3,14 @@
     <div class="w-full p-4">
       <Menubar :model="items">
         <template #end>
-          <div class="flex items-center gap-2">
-            <Avatar @click="toggle" label="A" shape="circle" />
-          </div>
+          <button
+            type="button"
+            class="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-sm font-semibold text-white"
+            aria-label="Menú de usuario"
+            @click="toggle"
+          >
+            A
+          </button>
         </template>
       </Menubar>
       <div class="overflow-y-auto">
@@ -22,7 +27,6 @@
 import { ref } from 'vue';
 import Menubar from 'primevue/menubar';
 import Menu from 'primevue/menu';
-import Avatar from 'primevue/avatar';
 import Panel from 'primevue/panel';
 import rutas from '../modules/system/router';
 import { useRouter } from 'vue-router';
@@ -45,7 +49,6 @@ const items_menu = ref([
   {
     label: 'Perfil',
     icon: 'pi pi-user',
-    
   },
   {
     label: 'Salir',
@@ -65,27 +68,9 @@ rutas.children.forEach(ruta => {
       router.push(ruta.path)
     }
   })
-
 })
 
 const toggle = (event) => {
   menu.value.toggle(event);
 };
-
 </script>
-
-<style scoped>
-.slide-fade-enter-active {
-  transition: all 0.2s ease-out;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateY(10px);
-  opacity: 0;
-}
-</style>

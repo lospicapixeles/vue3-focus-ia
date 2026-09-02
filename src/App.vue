@@ -1,6 +1,6 @@
 <template>
   <Toaster />
-  <router-view></router-view>
+  <router-view />
 </template>
 
 <script setup>

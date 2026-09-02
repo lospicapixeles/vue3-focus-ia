@@ -1,23 +1,22 @@
 <template>
-    <div class="h-screen flex justify-center items-center">
-        <div class="my-2 space-y-6 text-center">
-            <h1 class="text-8xl">4😴4</h1>
-            <h1 class="text-gray-600">!UPS!, Parece que esta dirección no existe.</h1>
-            <div class="mt-4">
-                <button @click="router.back()" class="bg-skin-info text-white px-2 py-2 rounded-md">Regresar a Zona Segura</button>
-            </div>
-        </div>
+  <main class="flex min-h-screen items-center justify-center bg-paper px-6">
+    <div class="max-w-md text-center">
+      <p class="page-kicker">Error 404</p>
+      <h1 class="mt-3 font-display text-7xl text-ink">4—4</h1>
+      <p class="mt-4 text-muted">Esta dirección no existe o ya no está disponible.</p>
+      <Button
+        class="mt-6"
+        label="Volver al inicio"
+        icon="pi pi-home"
+        @click="router.push('/')"
+      />
     </div>
+  </main>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router'
+import Button from 'primevue/button'
 
 const router = useRouter()
-
-onMounted(() => {
-    router.back()
-})
-
 </script>

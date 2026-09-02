@@ -44,7 +44,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   NProgress.configure({
     showSpinner: false,
-    template: `<div class="bar" style="height: 4px; background-color: #0085f1; border-radius: 10px" role="bar">
+    template: `<div class="bar" style="height: 3px; background-color: #2F7A4B; border-radius: 10px" role="bar">
             <div class="peg"></div>
         </div>
         <div class="spinner" role="spinner">

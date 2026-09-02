@@ -1,28 +1,34 @@
-
 <template>
-  <div class="bg-white rounded-xl p-4">
-    <div v-if="isLoading" class="text-center w-full">
-      <h1>Cargando...</h1>
+  <div>
+    <PageHeader
+      kicker="En vivo"
+      title="Sesión abierta"
+      description="La cámara lee expresiones cada cinco segundos. Mantén el encuadre estable."
+    >
+      <template #actions>
+        <Tag v-if="!isLoading" value="Capturando" severity="danger" rounded />
+      </template>
+    </PageHeader>
+
+    <div v-if="isLoading" class="mb-4 flex items-center gap-3 rounded-2xl border border-muted-line bg-surface px-4 py-3 text-sm text-muted">
+      <ProgressSpinner strokeWidth="4" style="width: 28px; height: 28px" />
+      Preparando modelos de reconocimiento…
     </div>
-    <div class="pb-2">
-      <h1 class="text-zinc-800">
-        <fa class="text-red-500" icon="video" /> Sesión en vivo
-      </h1>
-    </div>
-    <div style="position: relative; display: inline-block;">
-      <video 
-        class="rounded-xl w-full" 
-        ref="video" 
-        style="display: block;" 
-        autoplay 
-        muted
-        @loadedmetadata="onVideoLoaded"
-      ></video>
-      <canvas 
-        ref="canvas" 
-        class="absolute top-0 left-0 rounded-xl"
-        style="pointer-events: none;"
-      ></canvas>
+
+    <div class="overflow-hidden rounded-3xl border border-muted-line bg-ink p-3">
+      <div class="relative inline-block w-full">
+        <video
+          class="block w-full rounded-2xl"
+          ref="video"
+          autoplay
+          muted
+          @loadedmetadata="onVideoLoaded"
+        ></video>
+        <canvas
+          ref="canvas"
+          class="pointer-events-none absolute left-0 top-0 rounded-2xl"
+        ></canvas>
+      </div>
     </div>
   </div>
 </template>
@@ -33,6 +39,9 @@ import { useDisplayMedia } from '@vueuse/core';
 import useLive from '../hooks/useLive';
 import { useRoute } from 'vue-router';
 import * as faceapi from 'face-api.js';
+import PageHeader from '../../../../../components/PageHeader.vue'
+import ProgressSpinner from 'primevue/progressspinner'
+import Tag from 'primevue/tag'
 
 const route = useRoute();
 const video = ref(null);
@@ -42,7 +51,6 @@ const interval = ref(null);
 const { isLoading, onSubmit, new_emocion, getCamaras } = useLive();
 new_emocion.value.sesions_id = route.params.sesions_id;
 
-// Configurar useDisplayMedia para capturar la pantalla
 const {
   stream,
   start: startScreenCapture,
@@ -80,7 +88,6 @@ const startScreen = async () => {
 
 const onVideoLoaded = () => {
   if (video.value && canvas.value) {
-    // Ajustar el canvas al tamaño exacto del video mostrado
     const rect = video.value.getBoundingClientRect();
     canvas.value.width = rect.width;
     canvas.value.height = rect.height;
@@ -93,17 +100,14 @@ const detectFaces = async () => {
   if (!video.value || !canvas.value) return;
 
   const canvasEl = canvas.value;
-  
-  // Obtener el tamaño real del video mostrado en el DOM
   const rect = video.value.getBoundingClientRect();
   const displaySize = { width: rect.width, height: rect.height };
-  
-  // Ajustar canvas al tamaño del video mostrado
+
   canvasEl.width = rect.width;
   canvasEl.height = rect.height;
   canvasEl.style.width = `${rect.width}px`;
   canvasEl.style.height = `${rect.height}px`;
-  
+
   faceapi.matchDimensions(canvasEl, displaySize);
 
   const detections = await faceapi
@@ -115,62 +119,52 @@ const detectFaces = async () => {
 
   await onSubmit(detections);
 
-  // Calcular la escala entre el video original y el mostrado
   const scaleX = rect.width / video.value.videoWidth;
   const scaleY = rect.height / video.value.videoHeight;
-  
-  // Limpiar canvas
+
   const ctx = canvasEl.getContext('2d');
   ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-  
-  // Dibujar detecciones escaladas
+
   detections.forEach((detection) => {
-    // Validar que la detección tenga la estructura correcta
     if (!detection || !detection.detection || !detection.detection.box) {
-      return; // Saltar esta detección si no tiene la estructura esperada
+      return;
     }
-    
+
     const box = {
       x: detection.detection.box.x * scaleX,
       y: detection.detection.box.y * scaleY,
       width: detection.detection.box.width * scaleX,
       height: detection.detection.box.height * scaleY
     };
-    
-    // Dibujar caja de detección
-    ctx.strokeStyle = '#00ff00';
+
+    ctx.strokeStyle = '#2F7A4B';
     ctx.lineWidth = 2;
     ctx.strokeRect(box.x, box.y, box.width, box.height);
-    
-    // Dibujar landmarks escalados
+
     if (detection.landmarks && detection.landmarks.positions) {
       const landmarks = detection.landmarks.positions.map(point => ({
         x: point.x * scaleX,
         y: point.y * scaleY
       }));
-      
-      ctx.fillStyle = '#ff0000';
+
+      ctx.fillStyle = '#F3F0E8';
       landmarks.forEach(point => {
         ctx.beginPath();
         ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
         ctx.fill();
       });
     }
-    
-    // Dibujar etiqueta de edad, género y emoción
+
     if (detection.age !== undefined && detection.gender) {
-      ctx.fillStyle = '#00ff00';
-      ctx.font = '14px Arial';
-      
-      // Obtener la emoción predominante
+      ctx.font = '13px Inter, sans-serif';
+
       let emotionText = '';
       if (detection.expressions) {
         const emotions = Object.entries(detection.expressions);
-        const dominantEmotion = emotions.reduce((prev, current) => 
+        const dominantEmotion = emotions.reduce((prev, current) =>
           current[1] > prev[1] ? current : prev
         );
-        
-        // Traducir emociones al español
+
         const emotionTranslations = {
           'happy': 'Feliz',
           'sad': 'Triste',
@@ -180,27 +174,22 @@ const detectFaces = async () => {
           'surprised': 'Sorprendido',
           'neutral': 'Neutral'
         };
-        
+
         emotionText = emotionTranslations[dominantEmotion[0]] || dominantEmotion[0];
         const emotionPercentage = Math.round(dominantEmotion[1] * 100);
         emotionText += ` (${emotionPercentage}%)`;
       }
-      
-      // Mostrar información en múltiples líneas
+
       const ageGenderLabel = `${Math.round(detection.age)} años ${detection.gender}`;
-      
-      // Dibujar fondo semitransparente para mejor legibilidad
-      const textHeight = 32; // Altura para dos líneas de texto
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      const textHeight = 32;
+      ctx.fillStyle = 'rgba(23, 23, 20, 0.82)';
       ctx.fillRect(box.x, box.y - textHeight - 5, Math.max(ageGenderLabel.length * 8, emotionText.length * 8), textHeight);
-      
-      // Dibujar texto de edad y género
-      ctx.fillStyle = '#00ff00';
+
+      ctx.fillStyle = '#F3F0E8';
       ctx.fillText(ageGenderLabel, box.x + 2, box.y - 20);
-      
-      // Dibujar texto de emoción
+
       if (emotionText) {
-        ctx.fillStyle = '#ffff00'; // Amarillo para emociones
+        ctx.fillStyle = '#2F7A4B';
         ctx.fillText(emotionText, box.x + 2, box.y - 5);
       }
     }
@@ -219,35 +208,28 @@ onMounted(async () => {
     video.value.addEventListener('play', () => {
       interval.value = setInterval(detectFaces, 5000);
     });
-    
-    // Agregar listener para redimensionar canvas cuando cambie el tamaño del video
+
     window.addEventListener('resize', onVideoLoaded);
   }
 });
 
 onUnmounted(() => {
-  // Limpiar intervalo
   if (interval.value) {
     clearInterval(interval.value);
   }
 
-  // Desasociar el evento 'play' del video
   if (video.value) {
     video.value.removeEventListener('play', detectFaces);
   }
-  
-  // Remover listener de resize
+
   window.removeEventListener('resize', onVideoLoaded);
 
-  // Detener la captura de pantalla
   if (enabled.value) {
     stopScreenCapture();
   }
 
-  // Liberar el objeto del video
   if (video.value && video.value.srcObject) {
     video.value.srcObject = null;
   }
 });
 </script>
-

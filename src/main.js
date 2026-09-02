@@ -5,16 +5,13 @@ import App from './App.vue'
 
 import VueAwesomePaginate from "vue-awesome-paginate";
 import PrimeVue from 'primevue/config';
-import Aura from '@primeuix/themes/aura';
+import Tooltip from 'primevue/tooltip';
+import AliPreset from './theme/aliPreset';
 
-/** Librería de iconos */
 import 'primeicons/primeicons.css'
-
-/** Libreria de styles */
 import './style.css'
 import 'nprogress/nprogress.css';
 import "vue-awesome-paginate/dist/style.css";
-import { options } from '@fullcalendar/core/preact.js';
 
 const pinia = createPinia()
 
@@ -22,14 +19,19 @@ const app = createApp(App)
 
 app
   .use(pinia)
-  .use(router)
   .use(PrimeVue, {
+    locale: {
+      accept: 'Sí',
+      reject: 'No',
+    },
     theme: {
-      preset: Aura,
+      preset: AliPreset,
       options: {
         darkModeSelector: '.dark',
       }
     }
   })
+  .directive('tooltip', Tooltip)
+  .use(router)
   .use(VueAwesomePaginate)
   .mount('#app')

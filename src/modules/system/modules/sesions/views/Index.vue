@@ -2,119 +2,110 @@
   <CardModal
     :showing="openModal"
     @close="openModal = false"
-    title="Agregar nueva sesion"
+    title="Agregar nueva sesión"
   >
-    <div class="flex flex-wrap">
-      <div class="w-full md:w-1/2 pr-0 md:pr-2">
-        <label for=""
-          class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Inicio</label>
-        <input 
-          type="datetime-local" 
-          v-model="new_sesion.fecha_inicio"
-          class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
+    <form class="grid grid-cols-1 gap-4 md:grid-cols-2" @submit.prevent="onSubmit()">
+      <div class="flex flex-col gap-2">
+        <label for="sesion-inicio" class="text-sm font-medium text-ink">Inicio</label>
+        <InputText id="sesion-inicio" type="datetime-local" v-model="new_sesion.fecha_inicio" fluid />
       </div>
-      <div class="w-full md:w-1/2 pr-0 md:pr-2">
-        <label for=""
-          class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Fin</label>
-        <input 
-          type="datetime-local" 
-          v-model="new_sesion.fecha_fin"
-          class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
+      <div class="flex flex-col gap-2">
+        <label for="sesion-fin" class="text-sm font-medium text-ink">Fin</label>
+        <InputText id="sesion-fin" type="datetime-local" v-model="new_sesion.fecha_fin" fluid />
       </div>
-      <div class="w-full md:w-1/2 pr-0 md:pr-2">
-        <label for=""
-          class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Curso</label>
-        <Select 
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-ink">Curso</label>
+        <Select
           :options="cursosCombo"
           v-model="new_sesion.cursos_id"
           mode="offline"
           placeholder="Seleccione un curso"
         />
       </div>
-      <div class="w-full md:w-1/2 pr-0 md:pr-2">
-        <label for=""
-          class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Docentes</label>
-        <Select 
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-ink">Docente</label>
+        <Select
           :options="docentesCombo"
           v-model="new_sesion.docentes_id"
           mode="offline"
           placeholder="Seleccione un docente"
         />
       </div>
-      <div class="w-full mt-2">
-        <label class="block text-sm text-gray-700 dark:text-zinc-300 transition-all duration-300">Color</label>
+      <div class="flex flex-col gap-2">
+        <label for="sesion-color" class="text-sm font-medium text-ink">Color</label>
         <input
-          rows="3"
-          required
+          id="sesion-color"
           type="color"
           v-model="new_sesion.color"
-          class="h-10 w-10 rounded-full"
+          class="h-11 w-11 cursor-pointer rounded-full border border-muted-line bg-surface"
         />
       </div>
-      <div class="w-full mt-2">
-        <button
-          :disabled="isLoading"
-          :class="{'opacity-50 cursor-not-allowed': isLoading}"
+      <div class="md:col-span-2 flex justify-end">
+        <Button
           type="submit"
-          @click="onSubmit()"
-          class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-all duration-300">
-          {{ new_sesion.id ? 'Actualizar' : 'Crear' }}
-        </button>
+          :label="new_sesion.id ? 'Actualizar' : 'Crear'"
+          icon="pi pi-check"
+          :loading="isLoading"
+          :disabled="isLoading"
+        />
       </div>
-    </div>
+    </form>
   </CardModal>
+
   <CardModal
     :showing="openModalSesion"
-    @close="openModalSesion =  false"
-    :title="`Detalle de sesion ${new_sesion.curso}`"
+    @close="openModalSesion = false"
+    :title="`Detalle de sesión`"
   >
-    <div class="space-y-1 text-zinc-800">
-      <h1 
-        :style="`color: ${new_sesion.color}`"
-        class="text-xl font-bold">📕 {{ new_sesion.curso }}</h1>
-      <p class="text-sm">Fecha inicio: <strong>{{ new_sesion.fecha_inicio }}</strong></p>
-      <p class="text-sm">Fecha fin: <strong>{{ new_sesion.fecha_fin }}</strong></p>
+    <div class="space-y-2">
+      <p class="page-kicker">Sesión</p>
+      <h2 class="font-display text-3xl text-ink" :style="{ color: new_sesion.color }">
+        {{ new_sesion.curso }}
+      </h2>
+      <p class="text-sm text-muted">Inicio: <strong class="text-ink">{{ new_sesion.fecha_inicio }}</strong></p>
+      <p class="text-sm text-muted">Fin: <strong class="text-ink">{{ new_sesion.fecha_fin }}</strong></p>
     </div>
-    <div class="mt-2 flex space-x-2">
-      <button
-        type="button"
-        @click="newLiveSesion()"
-        class="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-lg text-white"
-      >
-        Ir a Sesión
-      </button>
-      <button
-        type="button"
-        :disabled="isLoading"
+    <div class="mt-5 flex flex-wrap gap-2">
+      <Button label="Ir a sesión" icon="pi pi-video" @click="newLiveSesion()" />
+      <Button
+        label="Eliminar"
+        icon="pi pi-trash"
+        severity="danger"
+        outlined
+        :loading="isLoading"
         @click="deleteSesion()"
-        :class="isLoading ? 'opacity-50' : ''"
-        class="px-3 py-1 bg-rose-500 hover:bg-rose-600 rounded-lg text-white"
-      >
-        Eliminar
-      </button>
+      />
     </div>
   </CardModal>
-   <div class="rounded-xl">
-    <label for=""
-          class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Aulas disponibles</label>
-    <Select 
+
+  <PageHeader
+    kicker="05  ·  Sesión"
+    title="Horarios"
+    description="Programa y abre sesiones en vivo por aula."
+  >
+    <template #actions>
+      <Button
+        label="Nueva sesión"
+        icon="pi pi-plus"
+        :disabled="!new_sesion.aulas_id"
+        v-tooltip.top="!new_sesion.aulas_id ? 'Elige un aula primero' : 'Crear sesión'"
+        @click="newSesion"
+      />
+    </template>
+  </PageHeader>
+
+  <div class="mb-5 max-w-md">
+    <label class="mb-2 block text-sm font-medium text-ink">Aula disponible</label>
+    <Select
       :options="aulasCombo"
       v-model="new_sesion.aulas_id"
       mode="offline"
       placeholder="Seleccione una aula"
     />
-    <div class="w-full flex py-2 justify-end">
-        <button
-          :disabled="!new_sesion.aulas_id"
-          :class="!new_sesion.aulas_id ? 'opacity-50' : ''"
-          @click="newSesion"
-          class="py-2 px-3 text-center bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 text-white rounded-lg">Nuevo</button>
-    </div>
-    <div class="mt-2">
-      <FullCalendar 
-        :options="options"
-      />
-    </div>
+  </div>
+
+  <div class="overflow-hidden rounded-3xl border border-muted-line bg-surface p-3 md:p-5">
+    <FullCalendar :options="options" />
   </div>
 </template>
 
@@ -129,10 +120,10 @@ import listPlugin from '@fullcalendar/list'
 import interactionPlugin from '@fullcalendar/interaction'
 import esLocale from '@fullcalendar/core/locales/es'
 import CardModal from '../../../components/CardModal.vue'
+import PageHeader from '../../../../../components/PageHeader.vue'
 import { v4 as uuidv4 } from 'uuid';
-import { useRouter } from 'vue-router'
-
-const route = useRouter()
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
 
 const {
   isLoading,
@@ -160,13 +151,11 @@ const newSesion = async () => {
 }
 
 const newLiveSesion = async () => {
-  //router.push(`/lives/${uuidv4()}/${new_sesion.value.id}`)
   window.open(`/lives/${uuidv4()}/${new_sesion.value.id}`, '_blank')
 }
 
 const options = reactive({
     plugins: [ dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin ],
-    //por defecto en semana detallado
     initialView: 'timeGridWeek',
     headerToolbar: {
         left: 'prev,next today',
@@ -189,7 +178,6 @@ const options = reactive({
         })
     },
     eventClick: async (arg) => {
-        //obtener datos del evento
         let sesion = sesions.value.find(item => (item.id == arg.event._def.publicId));
         new_sesion.value.id = sesion.id
         new_sesion.value.fecha_inicio = sesion.start
@@ -210,7 +198,6 @@ watch(
       await getSesionsByAulaId()
     }
   }
-
 )
 
 watch(
@@ -220,7 +207,6 @@ watch(
       options.events = sesions.value
     }
   }
-
 )
 
 if(new_sesion.value.aulas_id){

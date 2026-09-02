@@ -1,74 +1,85 @@
 <template>
-  <CardModal :showing="openModal"
-        @close="openModal = false" title="Nuevo curso">
-        <div class="flex flex-wrap">
-            <div class="w-full md:w-1/2 pr-0 md:pr-2">
-                <label for=""
-                    class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Nombre</label>
-                <input type="text" 
-                    v-model="new_curso.nombre"
-                    placeholder="Nombre de curso"
-                    class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
-            </div>
-            <div class="w-full md:w-1/2 pr-0">
-                <label for=""
-                    class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Descripcion</label>
-                <input type="text" 
-                    v-model="new_curso.descripcion"
-                    placeholder=""
-                    class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
-            </div>
-            <div class="w-1/2 md:w-1/4 pr-0">
-                <label for=""
-                    class="text-sm text-gray-500 dark:text-gray-400 transition-all duration-300">Credito</label>
-                <input type="number" 
-                    v-model="new_curso.creditos"
-                    placeholder=""
-                    class="w-full rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
-            </div>
-            <div class="mt-2 w-full">
-                <button
-                :disabled="isLoading"
-                :class="isLoading ? 'opacity-50 cursor-not-allowed' : ''"
-                @click="onSubmit()"
-                class="p-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black rounded-md">
-                Guardar
-                </button>
-            </div>
-        </div>
+  <CardModal :showing="openModal" @close="openModal = false" title="Nuevo curso">
+    <form class="grid grid-cols-1 gap-4 md:grid-cols-2" @submit.prevent="onSubmit()">
+      <div class="flex flex-col gap-2">
+        <label for="curso-nombre" class="text-sm font-medium text-ink">Nombre</label>
+        <InputText id="curso-nombre" v-model="new_curso.nombre" fluid placeholder="Nombre de curso" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="curso-descripcion" class="text-sm font-medium text-ink">Descripción</label>
+        <InputText id="curso-descripcion" v-model="new_curso.descripcion" fluid placeholder="Breve descripción" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="curso-creditos" class="text-sm font-medium text-ink">Créditos</label>
+        <InputNumber id="curso-creditos" v-model="new_curso.creditos" fluid :min="0" />
+      </div>
+      <div class="md:col-span-2 flex justify-end">
+        <Button type="submit" label="Guardar" icon="pi pi-check" :loading="isLoading" :disabled="isLoading" />
+      </div>
+    </form>
   </CardModal>
-  <div class="bg-white rounded-xl">
-        <div>
-            <h1 class="text-zinc-800 font-bold text-xl">Cursos 📚</h1>
-        </div>
-        <div class="mt-2 flex justify-between">
-        <input type="text" 
+
+  <PageHeader
+    kicker="04  ·  Gestión"
+    title="Cursos"
+    description="Catálogo académico vinculado a las sesiones del aula."
+  >
+    <template #actions>
+      <IconField>
+        <InputIcon class="pi pi-search" />
+        <InputText
           v-model="pag.buscar"
           @keypress.enter="changePage(1)"
           placeholder="Buscar cursos"
-          class="rounded-lg dark:text-white border focus:border-blue-500 px-2 py-1 outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200" />
-        <button @click="newCurso"
-            class="py-2 px-3 text-center bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 text-white rounded-lg">Nuevo</button>
+          aria-label="Buscar cursos"
+        />
+      </IconField>
+      <Button label="Nuevo" icon="pi pi-plus" @click="newCurso" />
+    </template>
+  </PageHeader>
+
+  <ul v-if="cursos.length" class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <li
+      v-for="(curso, index) in cursos"
+      :key="curso.id"
+      class="rounded-3xl border border-muted-line bg-surface p-5"
+    >
+      <div class="flex items-start justify-between gap-3">
+        <p class="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+          {{ String(index + 1).padStart(2, '0') }}
+        </p>
+        <Button
+          icon="pi pi-trash"
+          rounded
+          text
+          severity="danger"
+          :aria-label="`Eliminar curso ${curso.nombre}`"
+          v-tooltip.top="'Eliminar'"
+          @click="confirmDelete(curso)"
+        />
       </div>
-      <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div v-for="curso in cursos" :key="curso" class="bg-cyan-100 rounded-lg shadow-md p-4">
-          <h3 class="text-xl font-semibold">📕 {{ curso.nombre }}</h3>
-          <p class="text-gray-500">{{ curso.descripcion }}</p>
-          <p class="text-gray-500 font-medium">Credito: {{ curso.creditos }}</p>
-          <div class="flex items-center space-x-2">
-            <button
-              @click="onDelete(curso.id)"
-              class="text-rose-500 text-lg"><i class="pi pi-trash"/></button>
-          </div>
-        </div>
-      </div>
-  </div> 
+      <h2 class="mt-3 font-display text-2xl text-ink">{{ curso.nombre }}</h2>
+      <p class="mt-1 text-sm leading-6 text-muted">{{ curso.descripcion || 'Sin descripción' }}</p>
+      <p class="mt-4 font-mono text-xs uppercase tracking-[0.14em] text-accent">
+        {{ curso.creditos || 0 }} créditos
+      </p>
+    </li>
+  </ul>
+  <div v-else class="rounded-3xl border border-dashed border-muted-line bg-surface px-6 py-16 text-center">
+    <p class="font-display text-2xl text-ink">No hay cursos</p>
+    <p class="mt-2 text-sm text-muted">Agrega un curso para poder programar sesiones.</p>
+  </div>
 </template>
 
 <script setup>
 import useCurso from '../hooks/useCurso'
 import CardModal from '../../../components/CardModal.vue'
-
+import PageHeader from '../../../../../components/PageHeader.vue'
+import InputText from 'primevue/inputtext'
+import InputNumber from 'primevue/inputnumber'
+import Button from 'primevue/button'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 const {
     pag,
     new_curso,
@@ -83,7 +94,7 @@ const {
 const newCurso = () => {
     new_curso.value.nombre = ''
     new_curso.value.descripcion = ''
-    new_curso.value.credito = ''
+    new_curso.value.creditos = 1
     openModal.value = true
 }
 
@@ -92,6 +103,11 @@ const changePage = async (e) => {
     await getCursos()
 }
 
+const confirmDelete = (curso) => {
+    if (window.confirm(`¿Eliminar el curso ${curso.nombre}?`)) {
+        onDelete(curso.id)
+    }
+}
 
 getCursos()
 </script>

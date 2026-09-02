@@ -1,21 +1,23 @@
 <template>
     <div class="w-full flex space-x-1">
         <div ref="select" class="w-full flex flex-col items-center relative transition-all duration-300">
-            <div :class="open ? 'ring-1 ring-skin-primary' : '', dark ? 'dark:bg-gray-900' : 'dark:bg-gray-800'"
-                class="w-full flex bg-white border dark:border-gray-700 dark:text-white  rounded-md pl-2 transition-all duration-300">
+            <div :class="open ? 'ring-2 ring-accent' : ''"
+                class="flex w-full rounded-xl border border-muted-line bg-surface pl-3 transition-all">
                 <input ref="input" :disabled="props.disabled"
                     :class="props.disabled ? 'cursor-not-allowed opacity-50' : ''"
                     @focus="open = true, query = '', result = props.options" v-model="query" @keyup="onSearch()"
                     @keypress.enter="onSelect(result[indexItem])" @keydown.arrow-down="onKeydown($event)"
                     @keydown.arrow-up="onKeydown($event)" @keydown.tab="open = false"
                     :placeholder="props.placeholder ? props.placeholder : 'Seleccione un Item'"
-                    class="p-1 bg-gray-100 appearance-none bg-transparent outline-none w-full">
+                    :aria-expanded="open"
+                    role="combobox"
+                    class="w-full appearance-none bg-transparent py-2.5 outline-none">
                 <input hidden class="p-1 appearance-none bg-transparent outline-none w-full" :value="modelValue">
                 <div class="text-gray-300 w-8 flex items-center border-gray-200">
                     <label for="input">
                         <button @click="open = !open,result = props.options, input.focus()" type="button"
                             :disabled="props.disabled"
-                            class="hidden md:inline-block cursor-pointer w-8 h-6 text-gray-600 dark:text-gray-300 outline-none focus:outline-none transition-all duration-300">
+                            class="hidden h-6 w-8 cursor-pointer text-muted outline-none md:inline-block">
                             <i v-if="!open" class="pi pi-caret-down" />
                             <i v-else class="pi pi-caret-up" />
                         </button>
@@ -32,14 +34,14 @@
                 </div>
             </div>
             <div v-if="open" ref="divResultRef"
-                class="z-[9] bg-white dark:bg-gray-800 dark:border-gray-600 mt-10 absolute shadow border top-100 w-full lef-0 rounded max-h-48 overflow-y-auto scrollbar scrollbar-thumb-primary-200 dark:scrollbar-thumb-primary-500 scrollbar-track-white dark:scrollbar-track-gray-800">
+                class="absolute z-[9] mt-12 max-h-48 w-full overflow-y-auto rounded-xl border border-muted-line bg-surface shadow-lg">
                 <div v-if="result.length">
                     <ul v-if="!table">
                         <li v-for="(item,index) in result" :key="item" @click="onSelect(item), emits('selected', item)"
-                            class="w-full cursor-pointer text-gray-800 border-b dark:border-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"
-                            :class="{'bg-blue-500 text-white hover:bg-blue-500 dark:hover:bg-blue-500' : item.codigo == modelValue}">
-                            <div class="w-full px-2 py-1" :class="{ 'text-white': item.codigo == modelValue}">
-                                <h1 :class="{'text-cyan-400' : indexItem == index}">
+                            class="w-full cursor-pointer border-b border-muted-line text-ink hover:bg-accent-soft"
+                            :class="{'bg-accent text-white hover:bg-accent-dark' : item.codigo == modelValue}">
+                            <div class="w-full px-3 py-2" :class="{ 'text-white': item.codigo == modelValue}">
+                                <h1 :class="{'underline decoration-accent' : indexItem == index && item.codigo != modelValue}">
                                     {{ item.descripcion }}
                                 </h1>
                             </div>
