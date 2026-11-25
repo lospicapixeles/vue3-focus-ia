@@ -2,7 +2,7 @@
     <div class="w-full flex space-x-1">
         <div ref="select" class="w-full flex flex-col items-center relative transition-all duration-300">
             <div :class="open ? 'ring-2 ring-accent' : ''"
-                class="flex w-full rounded-xl border border-muted-line bg-surface pl-3 transition-all">
+                class="flex w-full rounded-lg border border-muted-line bg-surface pl-3 transition-all">
                 <input ref="input" :disabled="props.disabled"
                     :class="props.disabled ? 'cursor-not-allowed opacity-50' : ''"
                     @focus="open = true, query = '', result = props.options" v-model="query" @keyup="onSearch()"
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div v-if="open" ref="divResultRef"
-                class="absolute z-[9] mt-12 max-h-48 w-full overflow-y-auto rounded-xl border border-muted-line bg-surface shadow-lg">
+                class="absolute z-[9] mt-12 max-h-48 w-full overflow-y-auto rounded-lg border border-muted-line bg-surface shadow-panel">
                 <div v-if="result.length">
                     <ul v-if="!table">
                         <li v-for="(item,index) in result" :key="item" @click="onSelect(item), emits('selected', item)"

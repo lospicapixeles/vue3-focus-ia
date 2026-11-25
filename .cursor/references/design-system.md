@@ -1,36 +1,32 @@
-# Design system
+# Design system — Ali Console
 
 ## Personalidad
 
-Preciso, editorial, sobrio y ligeramente experimental.
+SaaS profesional, claro y preciso. Menos editorial, más producto (Linear / Stripe Dashboard).
 
 ## Colores
 
-- Ink: #171714
-- Paper: #F3F0E8
-- Accent: #E6542F
-- Muted: #A7A297
+- Ink: `#0f1412`
+- Paper: `#f4f6f5`
+- Surface: `#ffffff`
+- Accent: `#1f6b45`
+- Muted: `#5a635e`
+- Line: `#e1e6e3`
+- Danger: `#b42318`
 
 ## Tipografía
 
-- Titulares: Fraunces
-- Interfaz y cuerpo: Inter
-- Datos técnicos: IBM Plex Mono
+- UI y títulos: Inter
+- Datos técnicos / variantes: IBM Plex Mono
 
 ## Composición
 
-- Retícula de 12 columnas.
-- Mucho espacio vertical.
-- Títulos alineados al borde izquierdo.
-- Asimetría controlada en secciones editoriales.
+- Sidebar oscura fija 260px
+- Contenido max-width 6xl, padding consistente
+- Radios 8–10px (no pills ni cards exageradas)
+- Empty states con acción clara
+- Breadcrumb en header + skip link
 
 ## Firma visual
 
-Usar numeración editorial, líneas finas y anotaciones marginales.
-No utilizar tarjetas para contenido que pueda presentarse directamente.
-
-## Referencias internas
-
-- `src/components/Button.tsx`
-- `src/components/PageHeader.tsx`
-- `src/styles/tokens.css`
+Verde institucional Ali + tipografía densa. Sin numeración “01 ·” ni tipografía display serif en chrome.

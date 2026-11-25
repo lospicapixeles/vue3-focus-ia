@@ -3,15 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --ink: #171714;
-  --paper: #F3F0E8;
-  --surface: #FFFCF6;
-  --accent: #2F7A4B;
-  --accent-dark: #24563b;
-  --accent-soft: #d7eadc;
-  --muted: #6B665C;
-  --line: #D6D0C2;
-  --focus: #2F7A4B;
+  /* Consola Ali — SaaS sobrio, alto contraste */
+  --ink: #0f1412;
+  --paper: #f4f6f5;
+  --surface: #ffffff;
+  --accent: #1f6b45;
+  --accent-dark: #165435;
+  --accent-soft: #e4f2ea;
+  --muted: #5a635e;
+  --line: #e1e6e3;
+  --focus: #1f6b45;
+  --danger: #b42318;
+  --warning: #b54708;
+  --success: #1f6b45;
+  --radius: 10px;
+  --shadow-sm: 0 1px 2px rgba(15, 20, 18, 0.04);
+  --shadow-md: 0 4px 16px rgba(15, 20, 18, 0.06);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,
@@ -24,35 +35,70 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: Inter, system-ui, sans-serif;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 #nprogress .bar {
   background: var(--accent) !important;
-  height: 3px !important;
+  height: 2px !important;
 }
 
 :focus-visible {
   outline: 2px solid var(--focus);
-  outline-offset: 3px;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .skip-link {
   position: absolute;
   left: 1rem;
-  top: -3rem;
+  top: -4rem;
   z-index: 80;
-  border-radius: 10px;
-  background: var(--accent);
+  border-radius: 8px;
+  background: var(--ink);
   color: #fff;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
+  transition: top 0.15s ease;
 }
 
 .skip-link:focus {
   top: 1rem;
+}
+
+.page-kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.ali-card {
+  @apply rounded-[10px] border border-muted-line bg-surface;
+  box-shadow: var(--shadow-sm);
+}
+
+.ali-panel {
+  @apply rounded-[10px] border border-muted-line bg-surface p-5 md:p-6;
+  box-shadow: var(--shadow-sm);
+}
+
+.ali-empty {
+  @apply flex flex-col items-center justify-center rounded-[10px] border border-dashed border-muted-line bg-surface px-6 py-14 text-center;
+}
+
+.ali-stat {
+  @apply rounded-[10px] border border-muted-line bg-surface p-4;
+  box-shadow: var(--shadow-sm);
+}
+
+.ali-btn-ghost {
+  @apply inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-accent-soft hover:text-ink;
 }
 
 .p-password,
@@ -63,35 +109,53 @@ body {
 
 .p-dialog {
   border-radius: 12px !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .p-dialog-header {
   border-radius: 12px 12px 0 0 !important;
+  border-bottom: 1px solid var(--line) !important;
 }
 
-.page-kicker {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
+.p-datatable {
+  font-size: 0.9rem;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background: var(--paper) !important;
+  color: var(--muted) !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--muted);
+}
+
+.p-inputtext,
+.p-select,
+.p-password-input {
+  border-radius: 8px !important;
+}
+
+.p-button {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
 }
 
 .fc {
   --fc-border-color: var(--line);
   --fc-button-bg-color: var(--ink);
   --fc-button-border-color: var(--ink);
-  --fc-button-hover-bg-color: #2C2A24;
+  --fc-button-hover-bg-color: #1c2420;
   --fc-button-active-bg-color: var(--accent);
   --fc-button-active-border-color: var(--accent);
-  --fc-today-bg-color: rgba(47, 122, 75, 0.10);
+  --fc-today-bg-color: rgba(31, 107, 69, 0.08);
   --fc-page-bg-color: var(--surface);
   font-family: Inter, system-ui, sans-serif;
 }
 
 .fc .fc-toolbar-title {
-  font-family: Fraunces, Georgia, serif;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 600;
 }
 

@@ -4,6 +4,7 @@ import routerCurso from '../modules/cursos/router'
 import routerSesion from '../modules/sesions/router'
 import routerLive from '../modules/live/router'
 import routerEmocion from '../modules/emociones/router'
+import routerPostura from '../modules/posturas/router'
 
 export default {
     name: 'home',
@@ -51,6 +52,12 @@ export default {
             icon: 'pi pi-face-smile',
             path: '/emociones',
             ...routerEmocion
+        },
+        {
+            name: 'posturas',
+            icon: 'pi pi-users',
+            path: '/posturas',
+            ...routerPostura
         }
     ]
 }

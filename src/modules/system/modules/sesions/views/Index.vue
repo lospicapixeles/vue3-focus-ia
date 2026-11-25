@@ -79,7 +79,7 @@
   </CardModal>
 
   <PageHeader
-    kicker="05  ·  Sesión"
+    kicker="Sesión"
     title="Horarios"
     description="Programa y abre sesiones en vivo por aula."
   >

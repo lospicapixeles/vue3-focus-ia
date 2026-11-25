@@ -16,7 +16,7 @@
     </CardModal>
 
     <PageHeader
-        kicker="03  ·  Gestión"
+        kicker="Gestión"
         title="Aulas"
         description="Espacios físicos donde se registran las sesiones."
     >

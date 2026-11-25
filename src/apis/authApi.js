@@ -1,10 +1,7 @@
 import axios from "axios";
 
-axios.defaults.withCredentials = true
-
 const authApi = axios.create({
-    baseURL: 'https://ali.blocmin.com/api',
-    //baseURL: 'http://localhost:9001/api',
+    baseURL: import.meta.env.VITE_API_URL || 'https://ali.blocmin.com/api',
 })
 
 export default authApi

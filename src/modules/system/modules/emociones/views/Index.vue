@@ -1,77 +1,100 @@
 <template>
   <PageHeader
-    kicker="06  ·  Sesión"
-    title="Emociones"
-    description="Lectura por curso y sesión: asistencia y distribución emocional."
+    kicker="Análisis"
+    title="Emociones faciales"
+    description="Distribución por sesión. Participantes anónimos (Alumno N) salvo match facial opcional."
   />
 
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-    <div>
-      <label class="mb-2 block text-sm font-medium text-ink">Curso</label>
-      <Select
-        :options="cursos"
-        v-model="filtro.cursos_id"
-        mode="offline"
-        placeholder="Seleccione un curso"
-      />
+  <Card class="mb-6 p-4 md:p-5">
+    <p class="mb-3 text-sm font-medium text-ink">Filtros</p>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div class="space-y-1.5">
+        <Label for="emo-curso">Curso</Label>
+        <NativeSelect
+          id="emo-curso"
+          :model-value="filtro.cursos_id ?? ''"
+          placeholder="Seleccionar curso"
+          @update:model-value="onCurso"
+        >
+          <option
+            v-for="c in cursos"
+            :key="c.codigo"
+            :value="c.codigo"
+          >
+            {{ c.descripcion }}
+          </option>
+        </NativeSelect>
+      </div>
+      <div class="space-y-1.5">
+        <Label for="emo-sesion">Sesión</Label>
+        <NativeSelect
+          id="emo-sesion"
+          :model-value="filtro.sesions_id ?? ''"
+          placeholder="Seleccionar sesión"
+          :disabled="!filtro.cursos_id"
+          @update:model-value="onSesion"
+        >
+          <option
+            v-for="s in sesiones"
+            :key="s.codigo"
+            :value="s.codigo"
+          >
+            {{ s.descripcion }}
+          </option>
+        </NativeSelect>
+      </div>
     </div>
-    <div>
-      <label class="mb-2 block text-sm font-medium text-ink">Sesión</label>
-      <Select
-        :options="sesiones"
-        v-model="filtro.sesions_id"
-        mode="offline"
-        placeholder="Seleccione una sesión"
-      />
-    </div>
-  </div>
+  </Card>
 
-  <section v-if="chartData" class="mt-6 grid grid-cols-1 gap-6 rounded-3xl border border-muted-line bg-surface p-5 lg:grid-cols-2">
-    <div>
-      <h2 class="font-display text-xl text-ink">Asistencia</h2>
-      <ul class="mt-4 divide-y divide-muted-line">
+  <section v-if="chartData" class="grid grid-cols-1 gap-4 lg:grid-cols-2" aria-label="Resultados">
+    <Card class="p-5">
+      <h2 class="text-sm font-semibold text-ink">Participantes</h2>
+      <p class="mt-0.5 text-sm text-muted">Emoción dominante por etiqueta</p>
+      <ul v-if="alumnos?.length" class="mt-4 divide-y divide-muted-line">
         <li
           v-for="alumno in alumnos"
-          :key="alumno.id || alumno.name"
-          class="flex items-center justify-between gap-3 py-3"
+          :key="alumno.name"
+          class="flex items-center justify-between gap-3 py-3 text-sm"
         >
-          <span class="text-ink">{{ alumno.name }}</span>
-          <span class="font-mono text-sm text-muted">
-            <span aria-hidden="true">{{ emotionMap[alumno.emocion] }}</span>
-            {{ alumno.emocion }}
+          <span class="font-medium text-ink">{{ alumno.name }}</span>
+          <span class="rounded-md bg-paper px-2 py-1 text-xs text-muted">
+            {{ letraMap[alumno.emocion] || alumno.emocion }}
           </span>
         </li>
       </ul>
-    </div>
-    <div>
-      <h2 class="font-display text-xl text-ink">Distribución</h2>
+      <p v-else class="mt-6 text-sm text-muted">Sin participantes en esta sesión.</p>
+    </Card>
+    <Card class="p-5">
+      <h2 class="text-sm font-semibold text-ink">Distribución</h2>
       <PieChart
         class="mt-4"
         :chart-id="'emocionesChart'"
         :chart-data="chartData"
         :chart-options="chartOptions"
       />
-    </div>
+    </Card>
   </section>
 
-  <div
+  <EmptyState
     v-else
-    class="mt-6 rounded-3xl border border-dashed border-muted-line bg-surface px-6 py-16 text-center"
-  >
-    <p class="font-display text-2xl text-ink">Elige un curso y una sesión</p>
-    <p class="mt-2 text-sm text-muted">El reporte aparece cuando hay lecturas asociadas a esa clase.</p>
-  </div>
+    icon="pi pi-filter"
+    title="Seleccione curso y sesión"
+    description="El reporte aparece cuando existen lecturas asociadas."
+  />
 </template>
 
 <script setup>
 import { watch, ref } from 'vue'
-import { PieChart } from "vue-chart-3";
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, PieController } from "chart.js";
+import { PieChart } from 'vue-chart-3'
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, PieController } from 'chart.js'
 import useEmocion from '../hooks/useEmocion'
-import Select from '../../../components/data/Select.vue'
 import PageHeader from '../../../../../components/PageHeader.vue'
+import EmptyState from '../../../../../components/EmptyState.vue'
+import Card from '../../../../../components/ui/Card.vue'
+import Label from '../../../../../components/ui/Label.vue'
+import NativeSelect from '../../../../../components/ui/NativeSelect.vue'
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement, PieController);
+ChartJS.register(Title, Tooltip, Legend, ArcElement, PieController)
 
 const {
   filtro,
@@ -83,62 +106,44 @@ const {
   emociones,
   getEmocionesUsersBySesionesId,
   alumnos,
-  emotionMap,
+  letraMap,
 } = useEmocion()
 
-const chartData = ref();
-const chartOptions = ref();
+const chartData = ref()
+const chartOptions = ref()
 
 getCursosByDocenteId()
 
-const setChartData = () => {
-  const emocionesData = emociones.value || [];
-  const labels = emocionesData.map((emocion) => `${emocion.name} ${emocion.emoji}`);
-  const data = emocionesData.map((emocion) => emocion.percentage);
-  const backgroundColors = emocionesData.map((emocion) => emocion.color);
+const onCurso = async (val) => {
+  filtro.value.cursos_id = val || null
+  filtro.value.sesions_id = null
+  chartData.value = null
+  if (val) await getSesionesByCursosId()
+}
 
-  return {
-    labels,
-    datasets: [
-      {
-        label: "Emociones",
-        data,
-        backgroundColor: backgroundColors,
-        hoverOffset: 4,
-      },
-    ],
-  };
-};
-
-const setChartOptions = () => ({
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "bottom",
-    },
-    title: {
-      display: false,
-    },
-  },
-});
-
-watch(
-  () => filtro.value.cursos_id,
-  async (value) => {
-    if(!value) return
-    await getSesionesByCursosId()
+const onSesion = async (val) => {
+  filtro.value.sesions_id = val || null
+  if (!val) {
+    chartData.value = null
+    return
   }
-)
-
-watch(
-  () => filtro.value.sesions_id,
-  async (value) => {
-    if(!value) return
-    emociones.value = null
-    await getEmocionesBySesionesId()
-    await getEmocionesUsersBySesionesId()
-    chartData.value = setChartData();
-    chartOptions.value = setChartOptions();
+  emociones.value = null
+  await getEmocionesBySesionesId()
+  await getEmocionesUsersBySesionesId()
+  const emocionesData = emociones.value || []
+  chartData.value = {
+    labels: emocionesData.map((e) => e.name),
+    datasets: [{
+      label: 'Emociones',
+      data: emocionesData.map((e) => e.percentage),
+      backgroundColor: emocionesData.map((e) => e.color),
+    }],
   }
-)
+  chartOptions.value = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16, font: { size: 12 } } },
+    },
+  }
+}
 </script>

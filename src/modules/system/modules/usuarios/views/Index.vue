@@ -55,9 +55,9 @@
     </CardModal>
 
     <PageHeader
-        kicker="02  ·  Gestión"
+        kicker="Gestión"
         title="Usuarios"
-        description="Personas del observatorio: docentes, alumnos y administración."
+        description="Docentes, alumnos y administración del observatorio."
     >
         <template #actions>
             <IconField>

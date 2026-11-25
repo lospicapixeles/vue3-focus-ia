@@ -4,97 +4,133 @@
 
     <div
       v-if="sidebarOpen"
-      class="fixed inset-0 z-30 bg-ink/40 lg:hidden"
+      class="fixed inset-0 z-30 bg-ink/40 backdrop-blur-[2px] lg:hidden"
+      aria-hidden="true"
       @click="sidebarOpen = false"
     />
 
     <aside
-      class="fixed inset-y-0 left-0 z-40 flex w-[272px] flex-col bg-ink text-paper transition-transform duration-200 lg:translate-x-0"
+      id="nav-principal"
+      class="fixed inset-y-0 left-0 z-40 flex w-[260px] flex-col border-r border-white/10 bg-ink text-white transition-transform duration-200 ease-out lg:translate-x-0"
       :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
       aria-label="Navegación principal"
     >
-      <div class="flex items-center gap-3 px-5 pt-6 pb-5">
-        <img src="/images/focus.svg" alt="" class="h-9 w-9 brightness-0 invert" />
-        <div>
-          <p class="font-display text-2xl leading-none text-white">Ali</p>
-          <p class="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/50">Observatorio</p>
+      <div class="flex h-14 items-center gap-2.5 border-b border-white/10 px-4">
+        <img src="/images/focus.svg" alt="" class="h-7 w-7 brightness-0 invert" />
+        <div class="min-w-0">
+          <p class="text-[15px] font-semibold tracking-tight text-white">Ali</p>
+          <p class="truncate text-[11px] text-white/45">Observatorio del aula</p>
         </div>
+        <button
+          type="button"
+          class="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-md text-white/60 hover:bg-white/10 hover:text-white lg:hidden"
+          aria-label="Cerrar menú"
+          @click="sidebarOpen = false"
+        >
+          <i class="pi pi-times" aria-hidden="true" />
+        </button>
       </div>
 
-      <nav class="flex-1 overflow-y-auto px-3 pb-6">
-        <section v-for="group in navGroups" :key="group.label" class="mb-6">
-          <p class="px-3 pb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+      <nav class="flex-1 overflow-y-auto px-2 py-3" aria-label="Secciones">
+        <section v-for="group in navGroups" :key="group.label" class="mb-4">
+          <h2 class="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/35">
             {{ group.label }}
-          </p>
-          <ul class="space-y-1">
+          </h2>
+          <ul class="space-y-0.5">
             <li v-for="item in group.items" :key="item.to">
               <RouterLink
                 :to="item.to"
-                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                :class="isActive(item.to) ? 'bg-accent text-white hover:bg-accent-dark hover:text-white' : ''"
+                class="group flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13.5px] font-medium text-white/65 transition-colors hover:bg-white/10 hover:text-white"
+                :class="isActive(item.to)
+                  ? 'bg-white/12 text-white shadow-soft ring-1 ring-white/10'
+                  : ''"
+                :aria-current="isActive(item.to) ? 'page' : undefined"
                 @click="sidebarOpen = false"
               >
-                <span class="font-mono text-[10px] text-current/70">{{ item.index }}</span>
-                <i :class="item.icon" aria-hidden="true" />
+                <i
+                  :class="[item.icon, isActive(item.to) ? 'text-accent-soft' : 'text-white/45 group-hover:text-white/70']"
+                  class="text-sm"
+                  aria-hidden="true"
+                />
                 <span>{{ item.label }}</span>
+                <span
+                  v-if="item.badge"
+                  class="ml-auto rounded bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white"
+                >
+                  {{ item.badge }}
+                </span>
               </RouterLink>
             </li>
           </ul>
         </section>
       </nav>
 
-      <div class="border-t border-white/10 p-3">
-        <div class="flex items-center gap-3 rounded-2xl bg-white/5 px-3 py-2.5">
+      <div class="border-t border-white/10 p-2">
+        <div class="flex items-center gap-2.5 rounded-lg px-2 py-2">
           <span
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-white"
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-semibold text-white"
             aria-hidden="true"
           >
             {{ initials }}
           </span>
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-medium text-white">{{ displayName }}</p>
-            <p class="truncate font-mono text-[10px] uppercase tracking-wider text-white/45">
-              {{ displayRole }}
-            </p>
+            <p class="truncate text-[11px] capitalize text-white/45">{{ displayRole }}</p>
           </div>
           <button
             type="button"
-            class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-md text-white/55 hover:bg-white/10 hover:text-white"
             aria-label="Cerrar sesión"
-            title="Salir"
             @click="onLogout"
           >
-            <i class="pi pi-sign-out" aria-hidden="true" />
+            <i class="pi pi-sign-out text-sm" aria-hidden="true" />
           </button>
         </div>
       </div>
     </aside>
 
-    <div class="lg:pl-[272px]">
-      <header class="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-muted-line bg-paper/90 px-4 py-3 backdrop-blur md:px-8">
-        <div class="flex items-center gap-3">
+    <div class="lg:pl-[260px]">
+      <header
+        class="sticky top-0 z-20 flex h-14 items-center justify-between gap-3 border-b border-muted-line bg-surface/90 px-4 backdrop-blur-md md:px-6"
+      >
+        <div class="flex min-w-0 items-center gap-2">
           <button
             type="button"
-            class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink hover:bg-accent-soft lg:hidden"
-            aria-label="Abrir menú"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-ink hover:bg-paper lg:hidden"
+            aria-label="Abrir menú de navegación"
             :aria-expanded="sidebarOpen"
+            aria-controls="nav-principal"
             @click="sidebarOpen = true"
           >
             <i class="pi pi-bars" aria-hidden="true" />
           </button>
-          <p class="hidden font-mono text-[11px] uppercase tracking-[0.16em] text-muted sm:block">
-            {{ currentKicker }}
-          </p>
+          <nav class="hidden min-w-0 items-center gap-1.5 text-sm sm:flex" aria-label="Ruta">
+            <span class="text-muted">Ali</span>
+            <i class="pi pi-angle-right text-[10px] text-muted/60" aria-hidden="true" />
+            <span class="truncate font-medium text-ink">{{ currentLabel }}</span>
+          </nav>
         </div>
-        <span
-          v-if="isLive"
-          class="rounded-md bg-red-700 px-2 py-1 text-xs font-medium text-white"
-        >
-          En vivo
-        </span>
+
+        <div class="flex items-center gap-2">
+          <span
+            v-if="isLive"
+            class="inline-flex items-center gap-1.5 rounded-md bg-danger/10 px-2 py-1 text-xs font-semibold text-danger"
+            role="status"
+          >
+            <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-danger" aria-hidden="true" />
+            En vivo
+          </span>
+          <RouterLink
+            to="/horarios"
+            class="ali-btn-ghost hidden sm:inline-flex"
+          >
+            <i class="pi pi-calendar" aria-hidden="true" />
+            Horarios
+          </RouterLink>
+        </div>
       </header>
 
-      <main id="contenido" class="px-4 py-6 md:px-8 md:py-8" tabindex="-1" data-shell="ali-v2">
+      <main id="contenido" class="mx-auto max-w-6xl px-4 py-6 md:px-6 md:py-8" tabindex="-1">
         <slot />
       </main>
     </div>
@@ -116,24 +152,25 @@ onMounted(() => {
 
 const navGroups = [
   {
-    label: 'Espacio',
+    label: 'General',
     items: [
-      { index: '01', label: 'Inicio', icon: 'pi pi-home', to: '/' }
+      { label: 'Inicio', icon: 'pi pi-home', to: '/' },
     ]
   },
   {
     label: 'Gestión',
     items: [
-      { index: '02', label: 'Usuarios', icon: 'pi pi-users', to: '/usuarios' },
-      { index: '03', label: 'Aulas', icon: 'pi pi-building', to: '/aulas' },
-      { index: '04', label: 'Cursos', icon: 'pi pi-book', to: '/cursos' }
+      { label: 'Usuarios', icon: 'pi pi-users', to: '/usuarios' },
+      { label: 'Aulas', icon: 'pi pi-building', to: '/aulas' },
+      { label: 'Cursos', icon: 'pi pi-book', to: '/cursos' },
+      { label: 'Horarios', icon: 'pi pi-calendar', to: '/horarios' },
     ]
   },
   {
-    label: 'Sesión',
+    label: 'Análisis',
     items: [
-      { index: '05', label: 'Horarios', icon: 'pi pi-clock', to: '/horarios' },
-      { index: '06', label: 'Emociones', icon: 'pi pi-face-smile', to: '/emociones' }
+      { label: 'Emociones (rostro)', icon: 'pi pi-face-smile', to: '/emociones' },
+      { label: 'Posturas (cuerpo)', icon: 'pi pi-user', to: '/posturas', badge: 'Nuevo' },
     ]
   }
 ]
@@ -146,12 +183,13 @@ const isActive = (to) => {
 }
 
 const displayName = computed(() => user.value?.name || user.value?.email || 'Cuenta')
-const displayRole = computed(() => user.value?.rol || 'sesión activa')
+const displayRole = computed(() => user.value?.rol || 'sesión')
 const initials = computed(() => (displayName.value || 'A').charAt(0).toUpperCase())
 
-const currentKicker = computed(() => {
+const currentLabel = computed(() => {
   const flat = navGroups.flatMap((group) => group.items)
   const current = flat.find((item) => isActive(item.to))
-  return current ? `${current.index}  ·  ${current.label}` : 'Ali'
+  if (isLive.value) return 'Sesión en vivo'
+  return current?.label || 'Ali'
 })
 </script>

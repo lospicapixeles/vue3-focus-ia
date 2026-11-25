@@ -20,7 +20,7 @@
   </CardModal>
 
   <PageHeader
-    kicker="04  ·  Gestión"
+    kicker="Gestión"
     title="Cursos"
     description="Catálogo académico vinculado a las sesiones del aula."
   >

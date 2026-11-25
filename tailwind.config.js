@@ -8,23 +8,31 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#171714',
-        paper: '#F3F0E8',
-        surface: '#FFFCF6',
+        ink: '#0f1412',
+        paper: '#f4f6f5',
+        surface: '#ffffff',
         accent: {
-          DEFAULT: '#2F7A4B',
-          dark: '#24563b',
-          soft: '#d7eadc',
+          DEFAULT: '#1f6b45',
+          dark: '#165435',
+          soft: '#e4f2ea',
         },
         muted: {
-          DEFAULT: '#6B665C',
-          line: '#D6D0C2',
+          DEFAULT: '#5a635e',
+          line: '#e1e6e3',
         },
+        danger: '#b42318',
       },
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+      },
+      boxShadow: {
+        soft: '0 1px 2px rgba(15, 20, 18, 0.04)',
+        panel: '0 4px 16px rgba(15, 20, 18, 0.06)',
+      },
+      borderRadius: {
+        ali: '10px',
       },
     },
   },
